@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   root: true,
 
   env: {
@@ -7,7 +7,7 @@ module.exports = {
     'vue/setup-compiler-macros': true,
   },
 
-  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', 'prettier'],
+  extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/eslint-config-typescript', 'prettier'],
 
   parser: 'vue-eslint-parser',
   parserOptions: {
