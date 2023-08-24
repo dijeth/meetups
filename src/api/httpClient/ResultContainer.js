@@ -27,7 +27,7 @@
  * @mixes {any}
  */
 
-export const createResultContainer = (data, error, response) => ({
+const createResultContainer = (data, error, response) => ({
   success: !error,
   error,
   data,

@@ -6,43 +6,30 @@
           <component :is="Component" />
         </KeepAlive>
       </template>
-      <template #fallback>
+      <!-- <template #fallback>
         <UiAlert>Загрузка...</UiAlert>
-      </template>
+      </template> -->
     </RouterView>
   </LayoutBase>
 </template>
 
-<script>
+<script lang="ts" setup>
 import LayoutBase from './components/LayoutBase.vue';
-import UiAlert from './components/UiAlert.vue';
-import { httpClient } from './api/httpClient/httpClient.js';
+import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
 
-export default {
-  name: 'App',
+// TODO: Установить <title> - "Meetups"
+// TODO: для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
 
-  components: {
-    UiAlert,
-    LayoutBase,
-  },
+onUnauthenticated(() => {
+  // TODO: сессия пользователя больше не валидна - нужна обработка потери авторизации
+});
 
-  setup() {
-    // TODO: Установить <title> - "Meetups"
+onNetworkError(() => {
+  // TODO: проблема с сетью, стоит вывести тост пользователю
+});
 
-    // TODO: для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
-
-    httpClient.onUnauthenticated(() => {
-      // TODO: сессия пользователя больше не валидна - нужна обработка потери авторизации
-    });
-
-    httpClient.onNetworkError(() => {
-      // TODO: проблема с сетью, стоит вывести тост пользователю
-    });
-
-    // TODO: обработка глобальных ошибок - необработанные исключения можно залогировать и вывести тост
-    // TODO: глобальные ошибки можно поймать событиями "error" и "unhandledrejection"
-  },
-};
+// TODO: обработка глобальных ошибок - необработанные исключения можно залогировать и вывести тост
+// TODO: глобальные ошибки можно поймать событиями "error" и "unhandledrejection"
 </script>
 
 <style>

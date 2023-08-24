@@ -42,10 +42,10 @@ httpClient.interceptors.response.use(
 );
 
 // Добавляем возможность устанавливать обработчики некоторых ошибок API
-httpClient.onUnauthenticated = (handler) => {
+export const onUnauthenticated = (handler) => {
   httpClient._onAuthenticatedHandler = handler;
 };
 
-httpClient.onNetworkError = (handler) => {
+export const onNetworkError = (handler) => {
   httpClient._onNetworkError = handler;
 };
