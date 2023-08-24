@@ -1,17 +1,33 @@
 <template>
-  <div><slot /> (Task 06-wrappers/04-UiCheckbox)</div>
+  <label class="checkbox">
+    <input v-model="proxyModelValue" type="checkbox" class="checkbox__input" v-bind="attrs" />
+    <span class="checkbox__box"></span>
+    <slot />
+  </label>
 </template>
 
-<script>
-// TODO: Task 06-wrappers/04-UiCheckbox
+<script lang="ts" setup>
+import { computed, useAttrs } from 'vue';
 
-export default {
-  name: 'UiCheckbox',
-};
+type TModelValue = boolean | any[] | Set<any>;
+
+defineOptions({ inheritAttrs: false });
+const props = defineProps<{ modelValue: TModelValue }>();
+
+const emit = defineEmits(['update:modelValue']);
+const attrs = useAttrs();
+
+const proxyModelValue = computed({
+  get(): TModelValue {
+    return props.modelValue;
+  },
+  set(value: TModelValue) {
+    emit('update:modelValue', value);
+  },
+});
 </script>
 
 <style scoped>
-/* _checkbox.css */
 .checkbox {
   display: inline-block;
   position: relative;
@@ -59,7 +75,7 @@ export default {
   left: 50%;
   width: 14px;
   height: 13px;
-  background-image: url('../assets/icons/icon-check.svg');
+  background-image: url('@/assets/icons/icon-check.svg');
   border: none;
   transform: translate(-50%, -50%);
 }

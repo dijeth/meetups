@@ -1,17 +1,48 @@
 <template>
-  <div><slot /> (Task 06-wrappers/02-UiButton)</div>
+  <component
+    :is="tag"
+    class="button"
+    :class="{ [`button_${variant}`]: true, button_block: block }"
+    :type="tag === 'button' ? 'button' : undefined"
+    ><slot
+  /></component>
 </template>
 
-<script>
-// TODO: Task 06-wrappers/02-UiButton
+<script lang="ts" setup>
+import { computed, useAttrs } from 'vue';
 
-export default {
-  name: 'UiButton',
-};
+const attributes = useAttrs();
+const props = defineProps({
+  tag: {
+    type: [String, Object],
+    default: 'button',
+  },
+
+  variant: {
+    type: String,
+    default: 'secondary',
+    validate(value: string) {
+      return ['primary', 'secondary', 'danger'].includes(value);
+    },
+  },
+
+  block: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const attrs = computed(() =>
+  props.tag !== 'button'
+    ? attributes
+    : {
+        type: 'button',
+        ...attributes,
+      },
+);
 </script>
 
 <style scoped>
-/* _button.css */
 .button {
   display: inline-block;
   padding: 10px 24px;

@@ -1,17 +1,12 @@
 <template>
-  <div><slot /> (Task 06-wrappers/01-UiLink)</div>
+  <component :is="tag"><slot /></component>
 </template>
 
-<script>
-// TODO: Task 06-wrappers/01-UiLink
-
-export default {
-  name: 'UiLink',
-};
+<script lang="ts" setup>
+withDefaults(defineProps<{ tag?: string | object }>(), { tag: 'router-link' });
 </script>
 
 <style scoped>
-/* _link.css */
 .link {
   color: var(--blue);
   text-decoration: none;
