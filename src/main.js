@@ -8,9 +8,10 @@ import App from './App.vue';
 import { router } from './router/index.js';
 import { createPinia } from 'pinia';
 import { useAuthStore } from './stores/useAuthStore';
+import { createToaster } from './plugins/toaster';
 
-// TODO: установить плагины: head(title), toaster, progress
-createApp(App).use(router).use(createPinia()).mount('#app');
+// TODO: установить плагины: head(title), progress
+createApp(App).use(router).use(createPinia()).use(createToaster()).mount('#app');
 
 useAuthStore().syncUser();
 

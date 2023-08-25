@@ -1,17 +1,34 @@
 <template>
-  <div>Task 04-vue-router/02-TheToaster</div>
+  <div class="toasts">
+    <UiToast v-for="{ kind, text, id } in toasts" :kind="kind" :text="text" :key="id" @close="update()" />
+  </div>
 </template>
 
-<script>
-// TODO: Task 04-vue-router/02-TheToaster
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { nanoid } from 'nanoid';
+import UiToast, { type TToastKind, ToastKind } from './UiToast.vue';
 
-export default {
-  name: 'TheToaster',
+type TToast = { kind: TToastKind; text: string; id: string };
+
+const toasts = ref<TToast[]>([]);
+
+const success = (text: string) => {
+  toasts.value.push({ id: nanoid(5), kind: ToastKind.SUCCESS, text });
 };
+
+const error = (text: string) => {
+  toasts.value.push({ id: nanoid(5), kind: ToastKind.ERROR, text });
+};
+
+const update = () => {
+  toasts.value.splice(0, 1);
+};
+
+defineExpose({ success, error });
 </script>
 
 <style scoped>
-/* _toaster.css */
 .toasts {
   position: fixed;
   bottom: 8px;
@@ -28,35 +45,5 @@ export default {
     bottom: 72px;
     right: 112px;
   }
-}
-
-.toast {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-  padding: 16px;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  font-size: 18px;
-  line-height: 28px;
-  width: auto;
-}
-
-.toast + .toast {
-  margin-top: 20px;
-}
-
-.toast__icon {
-  margin-right: 12px;
-}
-
-.toast.toast_success {
-  color: var(--green);
-}
-
-.toast.toast_error {
-  color: var(--red);
 }
 </style>
