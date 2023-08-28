@@ -14,41 +14,46 @@ const setUnlogged = () => {
   localStorage.setItem(LS_KEY, 'false');
 };
 
-const isLogged = () => localStorage.getItem(LS_KEY) === 'true';
+export const isUserLogged = () => localStorage.getItem(LS_KEY) === 'true';
 
-const sendRequest = async <T>(apiRequest: () => Promise<ResultContainer<T>>): Promise<T | null> => {
-  const response = await apiRequest();
-  return response.error ? null : response.data;
+const sendApiRequest = async <T = any>(
+  apiRequest: () => Promise<ResultContainer<T>>,
+  onError?: (error: Error) => void,
+): Promise<T> => {
+  try {
+    const response = await apiRequest();
+    if (response.error) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
+  } catch (err) {
+    if (onError) {
+      onError(err as Error);
+    }
+    throw err;
+  }
 };
 
 export const getUserService = async (): Promise<User | null> => {
-  if (!isLogged()) {
+  if (!isUserLogged()) {
     return null;
   }
 
-  const response = await sendRequest<User>(getUser);
-  if (!response) {
-    setUnlogged();
-  }
-  return response;
+  return sendApiRequest(getUser /* setUnlogged */);
 };
 
-export const loginService = async (email: string, password: string): Promise<User | null> => {
-  const response = await sendRequest<User>(() => loginUser(email, password));
-  if (response) {
-    setLogged();
-  }
-  return response;
+export const loginService = async (email: string, password: string): Promise<User> => {
+  const user = await sendApiRequest(() => loginUser(email, password));
+  setLogged();
+  return user;
 };
 
-export const registerService = async (fullname: string, email: string, password: string): Promise<User | null> => {
-  return sendRequest<User>(() => registerUser(fullname, email, password));
+export const registerService = (fullname: string, email: string, password: string): Promise<User> => {
+  return sendApiRequest(() => registerUser(fullname, email, password));
 };
 
-export const logoutService = async (): Promise<void | null> => {
-  const response = await sendRequest<void>(logoutUser);
-  if (response) {
-    setUnlogged();
-  }
-  return response;
+export const logoutService = async (): Promise<void> => {
+  await sendApiRequest(logoutUser);
+  setUnlogged();
 };

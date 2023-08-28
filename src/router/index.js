@@ -21,6 +21,11 @@ export const routes = [
     redirect: { name: 'index' },
   },
   {
+    path: '/meetups/create',
+    name: 'create-meetup',
+    redirect: { name: 'index' },
+  },
+  {
     path: '/meetups/:meetupId(\\d+)',
     name: 'meetup',
     meta: {

@@ -13,7 +13,5 @@ import { createToaster } from './plugins/toaster';
 // TODO: установить плагины: head(title), progress
 createApp(App).use(router).use(createPinia()).use(createToaster()).mount('#app');
 
-useAuthStore().syncUser();
-
 // В этом же файле при необходимости можно сделать всё, что требуется делать ещё до создания приложения,
 // или что не относится к Vue приложению и UI

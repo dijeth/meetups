@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createErrorResult, createSuccessResult } from './ResultContainer.js';
+import { createErrorResult, createSuccessResult } from './ResultContainer';
 
 export const httpClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,

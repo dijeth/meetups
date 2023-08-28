@@ -1,6 +1,6 @@
 <template>
   <LayoutAuth title="Регистрация">
-    <UiForm>
+    <UiForm @submit.prevent="handleSubmit">
       <UiFormGroup label="Email">
         <UiInput v-model="email" name="email" type="email" required />
       </UiFormGroup>
@@ -23,15 +23,13 @@
 
       <template #append>
         Уже есть аккаунт?
-        <UiLink to="/login">Войдите</UiLink>
+        <UiLink :to="{ name: 'login' }">Войдите</UiLink>
       </template>
     </UiForm>
   </LayoutAuth>
 </template>
 
 <script lang="ts" setup>
-// TODO: Task 05-vue-router/01-AuthPages
-// TODO: Добавить именованные маршруты
 import { ref } from 'vue';
 import UiFormGroup from '../components/UiFormGroup.vue';
 import UiInput from '../components/UiInput.vue';
@@ -40,6 +38,9 @@ import UiLink from '../components/UiLink.vue';
 import UiButton from '../components/UiButton.vue';
 import UiForm from '../components/UiForm.vue';
 import LayoutAuth from '../components/LayoutAuth.vue';
+import { useToaster } from '../plugins/toaster';
+import { registerService } from '../services/authService';
+import { useRouter } from 'vue-router';
 
 // TODO: <title> "Регистрация | Meetups"
 
@@ -48,6 +49,9 @@ const fullname = ref('');
 const password = ref('');
 const password2 = ref('');
 const agree = ref(false);
+
+const toaster = useToaster();
+const router = useRouter();
 
 const validate = () => {
   if (password.value !== password2.value) {
@@ -61,17 +65,16 @@ const validate = () => {
 const handleSubmit = async () => {
   const validationError = validate();
   if (validationError) {
-    // TODO: Вывести тост с текстом ошибки
+    toaster.error(validationError);
     return;
   }
-  /*
-        TODO: Добавить обработчик сабмита
-              - В случае успешной регистрации:
-                - Перейти на страницу входа (Task 05-vue-router/01-AuthPages)
-                - Вывести тост "Регистрация выполнена успешно"
-              - В случае неуспешной регистрации:
-                - Вывести тост с текстом ошибки с API
-       */
+  try {
+    await registerService(fullname.value, email.value, password.value);
+    toaster.success('Регистрация выполнена успешно');
+    router.push({ name: 'login' });
+  } catch (err) {
+    toaster.error(`Ошибка регистрации пользователя "${err}"`);
+  }
 };
 </script>
 

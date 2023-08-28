@@ -16,9 +16,14 @@
 <script lang="ts" setup>
 import LayoutBase from './components/LayoutBase.vue';
 import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
+import { useAuthStore } from './stores/useAuthStore';
+import { useToaster } from './plugins/toaster';
+import { onMounted } from 'vue';
+
+const { syncUser } = useAuthStore();
+const toaster = useToaster();
 
 // TODO: Установить <title> - "Meetups"
-// TODO: для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
 
 onUnauthenticated(() => {
   // TODO: сессия пользователя больше не валидна - нужна обработка потери авторизации
@@ -30,6 +35,15 @@ onNetworkError(() => {
 
 // TODO: обработка глобальных ошибок - необработанные исключения можно залогировать и вывести тост
 // TODO: глобальные ошибки можно поймать событиями "error" и "unhandledrejection"
+
+onMounted(async () => {
+  // для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
+  try {
+    await syncUser();
+  } catch (err) {
+    toaster.error('Не удалось получить данные пользователя');
+  }
+});
 </script>
 
 <style>
