@@ -17,11 +17,9 @@
 import LayoutBase from './components/LayoutBase.vue';
 import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
 import { useAuthStore } from './stores/useAuthStore';
-import { useToaster } from './plugins/toaster';
 import { onMounted } from 'vue';
 
 const { syncUser } = useAuthStore();
-const toaster = useToaster();
 
 // TODO: Установить <title> - "Meetups"
 
@@ -38,11 +36,7 @@ onNetworkError(() => {
 
 onMounted(async () => {
   // для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
-  try {
-    await syncUser();
-  } catch (err) {
-    toaster.error('Не удалось получить данные пользователя');
-  }
+  await syncUser();
 });
 </script>
 

@@ -40,7 +40,11 @@ export const getUserService = async (): Promise<User | null> => {
     return null;
   }
 
-  return sendApiRequest(getUser /* setUnlogged */);
+  try {
+    return sendApiRequest(getUser, setUnlogged);
+  } catch (err) {
+    return null;
+  }
 };
 
 export const loginService = async (email: string, password: string): Promise<User> => {
