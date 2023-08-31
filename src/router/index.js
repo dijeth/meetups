@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { scrollBehavior } from './scrollBehaviour.js';
-import { authGuard } from './authGuard.js';
+import { authGuard } from './authGuard';
 
 /** @type {import('vue-router').RouteRecordRaw[]} */
 export const routes = [
@@ -21,9 +21,16 @@ export const routes = [
     redirect: { name: 'index' },
   },
   {
+    // TODO: Добавить страницу создания митапа
     path: '/meetups/create',
     name: 'create-meetup',
-    redirect: { name: 'index' },
+    component: () => import('../views/demo/PageDemo.vue'),
+    meta: { auth: true },
+  },
+  {
+    // TODO: Добавить страницу редактирования митапа
+    path: '/meetups/:meetupId(\\d+)/edit',
+    meta: { auth: true },
   },
   {
     path: '/meetups/:meetupId(\\d+)',
@@ -53,21 +60,15 @@ export const routes = [
   },
   {
     path: '/login',
+    meta: { auth: false },
     name: 'login',
     component: () => import('../views/PageLogin.vue'),
   },
   {
     path: '/register',
+    meta: { auth: false },
     name: 'register',
     component: () => import('../views/PageRegister.vue'),
-  },
-  {
-    path: '/meetups/create',
-    // TODO: Добавить страницу создания митапа
-  },
-  {
-    path: '/meetups/:meetupId(\\d+)/edit',
-    // TODO: Добавить страницу редактирования митапа
   },
   // TODO: Task 05-vue-router/02-PageNotFound
   {

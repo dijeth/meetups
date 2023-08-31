@@ -1,15 +1,15 @@
 <template>
   <LayoutBase>
-    <RouterView>
+    <RouterView v-if="isLoaded">
       <template #default="{ Component }">
         <KeepAlive v-if="Component" :max="3">
           <component :is="Component" />
         </KeepAlive>
       </template>
       <!-- <template #fallback>
-        <UiAlert>Загрузка...</UiAlert>
       </template> -->
     </RouterView>
+    <UiAlert v-else>Загрузка...</UiAlert>
   </LayoutBase>
 </template>
 
@@ -17,9 +17,10 @@
 import LayoutBase from './components/LayoutBase.vue';
 import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
 import { useAuthStore } from './stores/useAuthStore';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const { syncUser } = useAuthStore();
+const isLoaded = ref<boolean>(false);
 
 // TODO: Установить <title> - "Meetups"
 
@@ -37,6 +38,7 @@ onNetworkError(() => {
 onMounted(async () => {
   // для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
   await syncUser();
+  isLoaded.value = true;
 });
 </script>
 
