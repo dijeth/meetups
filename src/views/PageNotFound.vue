@@ -11,18 +11,7 @@
 
 <script>
 import UiContainer from '../components/UiContainer.vue';
-
-export default {
-  name: 'PageNotFound',
-
-  components: {
-    UiContainer,
-  },
-
-  setup() {
-    // TODO: <title> "Страница не найдена | Meetups"
-  },
-};
+// TODO: <title> "Страница не найдена | Meetups"
 </script>
 
 <style scoped>

@@ -1,17 +1,27 @@
 <template>
-  <div>Task 11-communication/01-UiButtonGroup | 11-provide-inject/01-UiButtonGroup</div>
+  <button
+    class="button-group__button"
+    :class="{ 'button-group__button_active': value === activeValue }"
+    type="button"
+    aria-selected="false"
+    @click="handleClick"
+  >
+    <slot />
+  </button>
 </template>
 
-<script>
-// TODO: Task 11-communication/01-UiButtonGroup | 11-provide-inject/01-UiButtonGroup
+<script lang="ts" setup>
+import { inject } from 'vue';
 
-export default {
-  name: 'UiButtonGroupItem',
+const props = defineProps<{ value: string }>();
+const activeValue = inject('activeValue');
+const setActiveValue = inject('setActiveValue');
+const handleClick = () => {
+  setActiveValue(props.value);
 };
 </script>
 
 <style scoped>
-/* _button-group.css */
 .button-group__button {
   background-color: var(--white);
   border: 2px solid var(--blue);

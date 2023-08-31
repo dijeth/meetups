@@ -1,15 +1,25 @@
 <template>
-  <div>Task 11-communication/01-UiButtonGroup | 11-provide-inject/01-UiButtonGroup</div>
+  <div class="button-group" role="group">
+    <slot />
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'UiButtonGroup',
-};
+<script lang="ts">
+import { computed, provide } from 'vue';
+
+type TListType = 'list' | 'calendar';
+
+const props = defineProps<{ modelValue: TListType }>();
+const emits = defineEmits(['update:modelValue']);
+
+provide(
+  'activeValue',
+  computed(() => props.modelValue),
+);
+provide('setActiveValue', (value: TListType) => emits('update:modelValue', value));
 </script>
 
 <style scoped>
-/* _button-group.css */
 .button-group {
   display: inline-flex;
   flex-direction: row;
