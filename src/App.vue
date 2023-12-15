@@ -18,28 +18,43 @@ import LayoutBase from './components/LayoutBase.vue';
 import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
 import { useAuthStore } from './stores/useAuthStore';
 import { onMounted, ref } from 'vue';
+import { useToaster } from './plugins/toaster';
+import { useRouter } from 'vue-router';
 
-const { syncUser } = useAuthStore();
+const { syncUser, setUser } = useAuthStore();
 const isLoaded = ref<boolean>(false);
+const toaster = useToaster();
+const router = useRouter();
 
-// TODO: Установить <title> - "Meetups"
+// Установить <title> - "Meetups"
+document.title = 'Meetups';
 
-onUnauthenticated(() => {
-  // TODO: сессия пользователя больше не валидна - нужна обработка потери авторизации
+onUnauthenticated(async () => {
+  // сессия пользователя больше не валидна - нужна обработка потери авторизации
+  toaster.error('User session is outdated.');
+  setUser(null);
+  router.push({ name: 'index' });
 });
 
 onNetworkError(() => {
-  // TODO: проблема с сетью, стоит вывести тост пользователю
+  // проблема с сетью, стоит вывести тост пользователю
+  toaster.error('Network error. Try reloading the page later.');
 });
-
-// TODO: обработка глобальных ошибок - необработанные исключения можно залогировать и вывести тост
-// TODO: глобальные ошибки можно поймать событиями "error" и "unhandledrejection"
 
 onMounted(async () => {
   // для авторизованных пользователей - запросить новые данные пользователя для актуализации и проверки актуальности
   await syncUser();
   isLoaded.value = true;
 });
+
+// обработка глобальных ошибок - необработанные исключения можно залогировать и вывести тост
+// глобальные ошибки можно поймать событиями "error" и "unhandledrejection"
+const globalErrorHandler = (event: PromiseRejectionEvent | ErrorEvent) => {
+  console.log(event);
+  toaster.error('Global error.');
+};
+window.addEventListener('error', globalErrorHandler);
+window.addEventListener('unhandledrejection', globalErrorHandler);
 </script>
 
 <style>
