@@ -19,32 +19,20 @@ export const isUserLogged = () => localStorage.getItem(LS_KEY) === 'true';
 const sendApiRequest = async <T = any>(
   apiRequest: () => Promise<ResultContainer<T>>,
   onError?: (error: Error) => void,
-): Promise<T> => {
-  try {
-    const response = await apiRequest();
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
-
-    return response.data;
-  } catch (err) {
+): Promise<T | null> => {
+  const response = await apiRequest();
+  if (response.error) {
     if (onError) {
-      onError(err as Error);
+      onError(new Error(response.error.message));
     }
-    throw err;
+    return null;
   }
+
+  return response.data;
 };
 
 export const getUserService = async (): Promise<User | null> => {
-  if (!isUserLogged()) {
-    return null;
-  }
-
-  try {
-    return sendApiRequest(getUser, setUnlogged);
-  } catch (err) {
-    return null;
-  }
+  return isUserLogged() ? sendApiRequest(getUser, setUnlogged) : null;
 };
 
 export const loginService = async (email: string, password: string): Promise<User> => {
@@ -53,7 +41,7 @@ export const loginService = async (email: string, password: string): Promise<Use
   return user;
 };
 
-export const registerService = (fullname: string, email: string, password: string): Promise<User> => {
+export const registerService = (fullname: string, email: string, password: string): Promise<User | null> => {
   return sendApiRequest(() => registerUser(fullname, email, password));
 };
 

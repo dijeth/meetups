@@ -21,15 +21,14 @@ export const routes = [
     redirect: { name: 'index' },
   },
   {
-    // TODO: Добавить страницу создания митапа
     path: '/meetups/create',
     name: 'create-meetup',
-    component: () => import('../views/demo/PageDemo.vue'),
+    component: () => import('../views/PageCreateMeetup.vue'),
     meta: { auth: true },
   },
   {
-    // TODO: Добавить страницу редактирования митапа
     path: '/meetups/:meetupId(\\d+)/edit',
+    component: () => import('../views/PageEditMeetup.vue'),
     meta: { auth: true },
   },
   {

@@ -32,8 +32,7 @@ document.title = 'Meetups';
 onUnauthenticated(async () => {
   // сессия пользователя больше не валидна - нужна обработка потери авторизации
   toaster.error('User session is outdated.');
-  setUser(null);
-  router.push({ name: 'index' });
+  router.push({ name: 'index', replace: true });
 });
 
 onNetworkError(() => {
