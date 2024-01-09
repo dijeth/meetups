@@ -5,9 +5,11 @@
 </template>
 
 <script lang="ts">
-import { computed, provide } from 'vue';
+export type TListType = 'list' | 'calendar';
+</script>
 
-type TListType = 'list' | 'calendar';
+<script lang="ts" setup>
+import { computed, provide } from 'vue';
 
 const props = defineProps<{ modelValue: TListType }>();
 const emits = defineEmits(['update:modelValue']);

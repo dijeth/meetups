@@ -35,8 +35,8 @@ import { useRouter } from 'vue-router';
 
 // TODO: <title> "Вход | Meetups"
 
-const email = ref('');
-const password = ref('');
+const email = ref('admin@email.com');
+const password = ref('111111');
 
 const { setUser } = useAuthStore();
 const toaster = useToaster();
