@@ -46,7 +46,7 @@
   </UiContainer>
 </template>
 
-<script>
+<script setup lang="ts">
 import { computed, ref } from 'vue';
 import MeetupsList from '../components/MeetupsList.vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
@@ -61,30 +61,15 @@ import UiInput from '../components/UiInput.vue';
 import UiTransitionGroupFade from '../components/UiTransitionGroupFade.vue';
 import { useMeetupsFetch } from '../composables/useMeetupsFetch.js';
 import { useMeetupsFilter } from '../composables/useMeetupsFilter.js';
+import { VIEW_DEFAULT, type TViewType } from 'src/types';
 
-export default {
-  name: 'PageMeetups',
+const { meetups } = useMeetupsFetch();
 
-  components: {
-    UiTransitionGroupFade,
-    UiInput,
-    UiFormGroup,
-    UiButtonGroupItem,
-    UiIcon,
-    UiRadioGroup,
-    UiButtonGroup,
-    UiContainer,
-    UiAlert,
-  },
+const { filteredMeetups, filter, dateFilterOptions } = useMeetupsFilter(meetups);
 
-  setup() {
-    const { meetups } = useMeetupsFetch();
+const view = ref<TViewType>(VIEW_DEFAULT);
 
-    const { filteredMeetups, filter, dateFilterOptions } = useMeetupsFilter(meetups);
-
-    const view = ref('list');
-
-    /*
+/*
        TODO: Добавить синхронизацию фильтров и view с одноимёнными query параметрами
              - Измерение параметров фильтрации и view должны изменять query параметры маршрута
                - date, participation, search, view
@@ -94,24 +79,13 @@ export default {
              - Будущая задача composition/useQuerySync
      */
 
-    const viewComponent = computed(() => {
-      const viewToComponents = {
-        list: MeetupsList,
-        calendar: MeetupsCalendar,
-      };
-      return viewToComponents[view.value];
-    });
-
-    return {
-      meetups,
-      filter,
-      filteredMeetups,
-      dateFilterOptions,
-      view,
-      viewComponent,
-    };
-  },
-};
+const viewComponent = computed(() => {
+  const viewToComponents = {
+    list: MeetupsList,
+    calendar: MeetupsCalendar,
+  };
+  return viewToComponents[view.value];
+});
 </script>
 
 <style scoped>

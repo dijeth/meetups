@@ -4,21 +4,18 @@
   </div>
 </template>
 
-<script lang="ts">
-export type TListType = 'list' | 'calendar';
-</script>
-
 <script lang="ts" setup>
+import type { TViewType } from 'src/types';
 import { computed, provide } from 'vue';
 
-const props = defineProps<{ modelValue: TListType }>();
+const props = defineProps<{ modelValue: TViewType }>();
 const emits = defineEmits(['update:modelValue']);
 
 provide(
   'activeValue',
   computed(() => props.modelValue),
 );
-provide('setActiveValue', (value: TListType) => emits('update:modelValue', value));
+provide('setActiveValue', (value: TViewType) => emits('update:modelValue', value));
 </script>
 
 <style scoped>

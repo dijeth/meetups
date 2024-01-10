@@ -11,12 +11,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { TViewType } from 'src/types';
 import { inject } from 'vue';
-import type { TListType } from './UiButtonGroup.vue';
 
-const props = defineProps<{ value: TListType }>();
+const props = defineProps<{ value: TViewType }>();
 const activeValue = inject('activeValue');
-const setActiveValue = inject<(value: TListType) => void>('setActiveValue');
+const setActiveValue = inject<(value: TViewType) => void>('setActiveValue');
 const handleClick = () => {
   setActiveValue && setActiveValue(props.value);
 };
