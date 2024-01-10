@@ -14,7 +14,7 @@
           </UiInput>
         </UiFormGroup>
         <UiFormGroup inline>
-          <UiButtonGroup v-model="view">
+          <UiButtonGroup v-model="viewParam">
             <UiButtonGroupItem value="list">
               <svg fill="none" height="28" viewBox="0 0 28 28" width="28" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import MeetupsList from '../components/MeetupsList.vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
@@ -61,13 +61,14 @@ import UiInput from '../components/UiInput.vue';
 import UiTransitionGroupFade from '../components/UiTransitionGroupFade.vue';
 import { useMeetupsFetch } from '../composables/useMeetupsFetch.js';
 import { useMeetupsFilter } from '../composables/useMeetupsFilter.js';
-import { VIEW_DEFAULT, type TViewType } from 'src/types';
+import { VIEW_DEFAULT, type TViewType } from '../types';
+import { useQuerySync } from '../composables/useQuerySync';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const { dateParam, participationParam, viewParam, searchParam } = useQuerySync(() => route.query);
 const { meetups } = useMeetupsFetch();
-
 const { filteredMeetups, filter, dateFilterOptions } = useMeetupsFilter(meetups);
-
-const view = ref<TViewType>(VIEW_DEFAULT);
 
 /*
        TODO: Добавить синхронизацию фильтров и view с одноимёнными query параметрами
@@ -79,13 +80,12 @@ const view = ref<TViewType>(VIEW_DEFAULT);
              - Будущая задача composition/useQuerySync
      */
 
-const viewComponent = computed(() => {
-  const viewToComponents = {
-    list: MeetupsList,
-    calendar: MeetupsCalendar,
-  };
-  return viewToComponents[view.value];
-});
+const viewToComponent = {
+  list: MeetupsList,
+  calendar: MeetupsCalendar,
+};
+
+const viewComponent = computed(() => viewToComponent[viewParam.value]);
 </script>
 
 <style scoped>
