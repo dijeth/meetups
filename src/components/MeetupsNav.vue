@@ -18,7 +18,6 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { useToaster } from '../plugins/toaster';
 import { useRouter, type RouteLocationNamedRaw } from 'vue-router';
 import { computed } from 'vue';
-import { ParticipationType, QueryKey } from '../types';
 
 const authStore = useAuthStore();
 const toaster = useToaster();
@@ -28,11 +27,11 @@ const links = computed<{ to: RouteLocationNamedRaw; title: string }[]>(() =>
   authStore.isAuthenticated
     ? [
         {
-          to: { name: 'meetups', query: { [QueryKey.PARTICIPATION]: ParticipationType.ATTENDING } },
+          to: { name: 'meetups', query: { participation: 'attending' } },
           title: 'Мои митапы',
         },
         {
-          to: { name: 'meetups', query: { [QueryKey.PARTICIPATION]: ParticipationType.ORGANIZING } },
+          to: { name: 'meetups', query: { participation: 'organizing' } },
           title: 'Организуемые митапы',
         },
         { to: { name: 'create-meetup' }, title: 'Создать митап' },

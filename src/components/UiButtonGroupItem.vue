@@ -11,12 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { TViewType } from 'src/types';
 import { inject } from 'vue';
 
-const props = defineProps<{ value: TViewType }>();
+const props = defineProps<{ value: string }>();
 const activeValue = inject('activeValue');
-const setActiveValue = inject<(value: TViewType) => void>('setActiveValue');
+const setActiveValue = inject<(value: string) => void>('setActiveValue');
 const handleClick = () => {
   setActiveValue && setActiveValue(props.value);
 };

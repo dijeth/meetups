@@ -5,17 +5,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { TViewType } from 'src/types';
 import { computed, provide } from 'vue';
 
-const props = defineProps<{ modelValue: TViewType }>();
+const props = defineProps<{ modelValue: string }>();
 const emits = defineEmits(['update:modelValue']);
 
 provide(
   'activeValue',
   computed(() => props.modelValue),
 );
-provide('setActiveValue', (value: TViewType) => emits('update:modelValue', value));
+provide('setActiveValue', (value: string) => emits('update:modelValue', value));
 </script>
 
 <style scoped>
