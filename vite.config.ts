@@ -6,9 +6,13 @@ export default defineConfig({
   plugins: [vue(), splitVendorChunkPlugin()],
 
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+    alias: [
+      {
+        find: '@',
+        replacement: fileURLToPath(new URL('./src', import.meta.url)),
+      },
+      { find: /^\/(assets|icons)\/(.*)/, replacement: '/src/$1/$2' },
+    ],
   },
 
   server: {

@@ -12,24 +12,13 @@
   </ul>
 </template>
 
-<script>
+<script setup lang="ts">
 // TODO: Добавить <UiTransitionGroupFade>
+import type { TMeetup } from 'src/types';
 import MeetupCard from './MeetupCard.vue';
+import { RouterLink } from 'vue-router';
 
-export default {
-  name: 'MeetupsList',
-
-  components: {
-    MeetupCard,
-  },
-
-  props: {
-    meetups: {
-      type: Array,
-      required: true,
-    },
-  },
-};
+defineProps<{ meetups: TMeetup[] }>();
 </script>
 
 <style scoped>

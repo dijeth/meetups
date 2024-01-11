@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import MeetupsList from '../components/MeetupsList.vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
 import UiButtonGroup from '../components/UiButtonGroup.vue';
@@ -61,7 +60,8 @@ import UiInput from '../components/UiInput.vue';
 import UiTransitionGroupFade from '../components/UiTransitionGroupFade.vue';
 import { useMeetupsFetch } from '../composables/useMeetupsFetch.js';
 import { useQuerySync } from '../composables/useQuerySync';
-import type { TMeetup } from 'src/types';
+import type { TMeetup } from '../types';
+import MeetupsList from '../components/MeetupsList.vue';
 
 const dateFilterOptions = [
   { text: 'Все', value: 'all' },

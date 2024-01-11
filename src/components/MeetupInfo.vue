@@ -1,15 +1,40 @@
 <template>
-  <div>Task 02-components/03-MeetupInfo</div>
+  <ul class="meetup-info">
+    <li>
+      <img class="icon meetup-info__icon" alt="icon" src="/assets/icons/icon-user.svg" />
+      {{ organizer }}
+    </li>
+    <li>
+      <img class="icon meetup-info__icon" alt="icon" src="/assets/icons/icon-map.svg" />
+      {{ place }}
+    </li>
+    <li>
+      <img class="icon meetup-info__icon" alt="icon" src="/assets/icons/icon-cal-lg.svg" />
+      <time :datetime="datetime">{{ humanDate }}</time>
+    </li>
+  </ul>
 </template>
 
-<script>
-// TODO: Task 02-components/03-MeetupInfo
-// TODO: Add <UiIcon>
-// TODO: Add date utils
+<script setup lang="ts">
+import { computed } from 'vue';
+import dayjs from 'dayjs';
 
-export default {
-  name: 'MeetupInfo',
-};
+const props = withDefaults(
+  defineProps<{
+    date: number;
+    organizer?: string;
+    place?: string;
+  }>(),
+  { organizer: '', place: '' },
+);
+
+const humanDate = computed(() => {
+  return new Date(props.date).toLocaleDateString(navigator.language, { dateStyle: 'medium' });
+});
+
+const datetime = computed(() => {
+  return dayjs(props.date).format('YYYY-MM-DD');
+});
 </script>
 
 <style scoped>
