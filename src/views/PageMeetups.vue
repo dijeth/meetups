@@ -2,19 +2,19 @@
   <UiContainer>
     <div class="filters-panel">
       <div class="filters-panel__col">
-        <UiRadioGroup v-model="filter.date" :options="dateFilterOptions" name="date" />
+        <UiRadioGroup v-model="date" :options="dateFilterOptions" name="date" />
       </div>
 
       <div class="filters-panel__col">
         <UiFormGroup inline>
-          <UiInput v-model.trim="filter.search" rounded small placeholder="Поиск" type="search">
+          <UiInput v-model.trim="search" rounded small placeholder="Поиск" type="search">
             <template #left-icon>
               <UiIcon icon="search" />
             </template>
           </UiInput>
         </UiFormGroup>
         <UiFormGroup inline>
-          <UiButtonGroup v-model="viewParam">
+          <UiButtonGroup v-model="view">
             <UiButtonGroupItem value="list">
               <svg fill="none" height="28" viewBox="0 0 28 28" width="28" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed } from 'vue';
 import MeetupsList from '../components/MeetupsList.vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
@@ -60,32 +60,42 @@ import UiFormGroup from '../components/UiFormGroup.vue';
 import UiInput from '../components/UiInput.vue';
 import UiTransitionGroupFade from '../components/UiTransitionGroupFade.vue';
 import { useMeetupsFetch } from '../composables/useMeetupsFetch.js';
-import { useMeetupsFilter } from '../composables/useMeetupsFilter.js';
-import { VIEW_DEFAULT, type TViewType } from '../types';
 import { useQuerySync } from '../composables/useQuerySync';
-import { useRoute } from 'vue-router';
+import type { TMeetup } from 'src/types';
 
-const route = useRoute();
-const { dateParam, participationParam, viewParam, searchParam } = useQuerySync(() => route.query);
+const dateFilterOptions = [
+  { text: 'Все', value: 'all' },
+  { text: 'Прошедшие', value: 'past' },
+  { text: 'Ожидаемые', value: 'future' },
+];
+
 const { meetups } = useMeetupsFetch();
-const { filteredMeetups, filter, dateFilterOptions } = useMeetupsFilter(meetups);
+const view = useQuerySync('view', 'list');
+const search = useQuerySync('search', '');
+const date = useQuerySync('date', 'all');
+const participation = useQuerySync('participation', 'all');
 
-/*
-       TODO: Добавить синхронизацию фильтров и view с одноимёнными query параметрами
-             - Измерение параметров фильтрации и view должны изменять query параметры маршрута
-               - date, participation, search, view
-             - При значениях по умолчанию (all, list) query параметр добавляться не должен
-             - Изменение query параметров маршрута должно приводить к изменению
-             - Вынесите эту логику в универсальный компосабл useQuerySync
-             - Будущая задача composition/useQuerySync
-     */
+const dateFilter = (meetup: TMeetup) =>
+  date.value === 'all' ||
+  (date.value === 'past' && new Date(meetup.date) <= new Date()) ||
+  (date.value === 'future' && new Date(meetup.date) > new Date());
 
-const viewToComponent = {
-  list: MeetupsList,
-  calendar: MeetupsCalendar,
-};
+const participationFilter = (meetup: TMeetup) =>
+  participation.value === 'all' ||
+  (participation.value === 'organizing' && meetup.organizing) ||
+  (participation.value === 'attending' && meetup.attending);
 
-const viewComponent = computed(() => viewToComponent[viewParam.value]);
+const searchFilter = (meetup: TMeetup) =>
+  [meetup.title, meetup.description, meetup.place, meetup.organizer]
+    .join(' ')
+    .toLowerCase()
+    .includes(search.value.toLowerCase());
+
+const filteredMeetups = computed(() =>
+  meetups.value.filter((meetup: TMeetup) => dateFilter(meetup) && participationFilter(meetup) && searchFilter(meetup)),
+);
+
+const viewComponent = computed(() => (view.value === 'list' ? MeetupsList : MeetupsCalendar));
 </script>
 
 <style scoped>
