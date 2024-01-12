@@ -9,14 +9,18 @@
         </div>
         <div class="meetup__aside">
           <MeetupInfo :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
-          <!-- TODO: Добавить проверку на аутентификацию и является ли пользователь организатором митапа -->
-          <!-- TODO: Реализовать кнопки (некоторые должны быть ссылками) -->
           <div class="meetup__aside-buttons">
             <!-- TODO: Может добавить тут слот? -->
-            <UiButton variant="primary" class="meetup__aside-button">Редактировать</UiButton>
-            <UiButton variant="danger" class="meetup__aside-button">Удалить</UiButton>
-            <UiButton variant="secondary" class="meetup__aside-button">Отменить участие</UiButton>
-            <UiButton variant="primary" class="meetup__aside-button"> Участвовать </UiButton>
+            <UiButton
+              v-for="{ key, title, variant, tag, to, onClick } in userButtons"
+              :variant="variant"
+              class="meetup__aside-button"
+              :key="key"
+              :tag="tag"
+              :to="to"
+              @click="onClick"
+              >{{ title }}
+            </UiButton>
           </div>
         </div>
       </div>
@@ -30,6 +34,9 @@ import MeetupInfo from './MeetupInfo.vue';
 import UiContainer from './UiContainer.vue';
 import UiButton from './UiButton.vue';
 import type { TMeetup } from 'src/types';
+import { useAuthStore } from '../stores/useAuthStore';
+import { computed } from 'vue';
+import { RouterLink, type RouteLocationRaw } from 'vue-router';
 
 // TODO: Добавить обработку кнопок, включая работу с API
 /*
@@ -39,7 +46,61 @@ import type { TMeetup } from 'src/types';
         - Текст ошибки в случае ошибки на API
  */
 // TODO: Будет плюсом блокировать кнопку на время загрузки
-defineProps<{ meetup: TMeetup }>();
+
+const props = defineProps<{ meetup: TMeetup }>();
+const { isAuthenticated } = useAuthStore();
+
+type TActionButton = {
+  variant: 'primary' | 'secondary' | 'danger';
+  title: string;
+  key: string;
+  tag: 'a' | 'button' | Object;
+  to?: RouteLocationRaw;
+  onClick?: (...args: any[]) => void;
+};
+
+const ActionButton: { [k: string]: TActionButton } = {
+  EDIT: {
+    variant: 'primary',
+    title: 'Редактировать',
+    key: 'EDIT',
+    tag: RouterLink,
+    to: { name: 'edit-meetup', params: { meetupId: props.meetup.id.toString() } },
+  },
+  DELETE: { variant: 'danger', title: 'Удалить', key: 'DELETE', tag: 'button', onClick: () => {} },
+  CANCEL_ATTENDING: {
+    variant: 'secondary',
+    title: 'Отменить участие',
+    key: 'CANCEL_ATTENDING',
+    tag: 'button',
+    onClick: () => {},
+  },
+  ATTEND: {
+    variant: 'primary',
+    title: 'Участвовать',
+    key: 'ATTEND',
+    tag: 'button',
+    onClick: () => {
+      console.log('Участвовать');
+    },
+  },
+};
+
+const userButtons = computed<TActionButton[]>(() => {
+  if (props.meetup.organizing) {
+    return [ActionButton.EDIT, ActionButton.DELETE];
+  }
+
+  if (props.meetup.attending) {
+    return [ActionButton.CANCEL_ATTENDING];
+  }
+
+  if (isAuthenticated) {
+    return [ActionButton.ATTEND];
+  }
+
+  return [];
+});
 </script>
 
 <style scoped>

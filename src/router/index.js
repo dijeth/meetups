@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { scrollBehavior } from './scrollBehaviour.js';
+import { scrollBehavior } from './scrollBehaviour';
 import { authGuard } from './authGuard';
 
 /** @type {import('vue-router').RouteRecordRaw[]} */
@@ -28,6 +28,7 @@ export const routes = [
   },
   {
     path: '/meetups/:meetupId(\\d+)/edit',
+    name: 'edit-meetup',
     component: () => import('../views/PageEditMeetup.vue'),
     meta: { auth: true },
   },
