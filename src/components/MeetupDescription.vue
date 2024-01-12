@@ -1,13 +1,11 @@
 <template>
-  <div>Task 02-components/01-MeetupDescription</div>
+  <p class="meetup-description">{{ description }}</p>
 </template>
 
-<script>
-// TODO: Task 02-components/01-MeetupDescription
+<script setup lang="ts">
+import type { TMeetup } from 'src/types';
 
-export default {
-  name: 'MeetupDescription',
-};
+defineProps<{ description: TMeetup['description'] }>();
 </script>
 
 <style scoped>

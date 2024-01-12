@@ -1,14 +1,32 @@
 <template>
-  <div>Task 02-components/05-MeetupAgenda</div>
+  <div class="agenda-item">
+    <div class="agenda-item__col">
+      <img :src="icon" class="icon" :alt="iconKey" />
+    </div>
+    <div class="agenda-item__col">{{ time }}</div>
+    <div class="agenda-item__col">
+      <h3 class="agenda-item__title">{{ title }}</h3>
+      <p v-if="data.type === 'talk'" class="agenda-item__talk">
+        <span>{{ data.speaker }}</span>
+        <span class="agenda-item__dot"></span>
+        <span class="agenda-item__lang">{{ data.language }}</span>
+      </p>
+      <p>{{ data.description }}</p>
+    </div>
+  </div>
 </template>
 
-<script>
-// TODO: Task 02-components/05-MeetupAgenda
-// TODO: add <UiIcon> component
+<script setup lang="ts">
+import type { TAgendaItem } from 'src/types';
+import { computed } from 'vue';
+import { AgendaItemDefaultTitle, AgendaItemIcon } from '../const';
 
-export default {
-  name: 'MeetupAgendaItem',
-};
+// TODO: add <UiIcon> component
+const props = defineProps<{ data: TAgendaItem }>();
+const time = computed(() => `${props.data.startsAt} - ${props.data.endsAt}`);
+const icon = computed(() => `/assets/icons/icon-${AgendaItemIcon[props.data.type]}.svg`);
+const iconKey = computed(() => AgendaItemIcon[props.data.type]);
+const title = computed(() => props.data.title || AgendaItemDefaultTitle[props.data.type]);
 </script>
 
 <style scoped>

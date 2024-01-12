@@ -1,21 +1,21 @@
 <template>
-  <div>Task 02-components/03-MeetupCover</div>
+  <div class="meetup-cover">
+    <h1 class="meetup-cover__title">{{ title }}</h1>
+  </div>
 </template>
 
-<script>
-// TODO: Task 02-components/03-MeetupCover
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default {
-  name: 'MeetupCover',
-};
+const props = withDefaults(defineProps<{ title?: string; image?: string }>(), { title: '' });
+const bgUrl = computed(() => `${props.image ? `url("${props.image}")` : 'var(--default-cover)'}`);
 </script>
 
 <style scoped>
 /* _meetup-cover.css */
-/* TODO: добавить v-bind в css */
 
 .meetup-cover {
-  --bg-url: var(--default-cover);
+  --bg-url: v-bind(bgUrl);
   background-size: cover;
   background-position: center;
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--bg-url);

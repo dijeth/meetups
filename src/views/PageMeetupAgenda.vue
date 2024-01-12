@@ -3,22 +3,11 @@
   <UiAlert v-else>Программа пока пуста...</UiAlert>
 </template>
 
-<script>
+<script setup lang="ts">
+import type { TMeetup } from 'src/types';
 import MeetupAgenda from '../components/MeetupAgenda.vue';
 import UiAlert from '../components/UiAlert.vue';
-
-export default {
-  name: 'PageMeetupAgenda',
-
-  components: { UiAlert, MeetupAgenda },
-
-  props: {
-    meetup: {
-      type: Object,
-      required: true,
-    },
-  },
-};
+defineProps<{ meetup: TMeetup }>();
 </script>
 
 <style scoped></style>

@@ -1,22 +1,20 @@
 <template>
-  <div>Task UiTabs</div>
+  <div class="tabs">
+    <div class="tabs__nav" role="tablist">
+      <slot name="tabs" />
+    </div>
+    <div class="tabs__content">
+      <slot />
+    </div>
+  </div>
 </template>
 
-<script>
-// TODO: Task UiTabs
-
-export default {
-  name: 'UiTabs',
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 /* _tabs.css */
 .tabs {
   margin: 0;
-}
-
-.tabs__content {
 }
 
 .tabs__nav {

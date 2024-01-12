@@ -16,7 +16,7 @@ export type TAgendaItem = {
   id: number;
   startsAt: string;
   endsAt: string;
-  type: AgendaItemType;
+  type: TAgendaItemType;
   title?: string;
   description?: string;
   speaker?: string;

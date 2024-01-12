@@ -24,40 +24,22 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import MeetupCover from './MeetupCover.vue';
 import MeetupInfo from './MeetupInfo.vue';
 import UiContainer from './UiContainer.vue';
 import UiButton from './UiButton.vue';
+import type { TMeetup } from 'src/types';
 
-export default {
-  name: 'MeetupView',
-
-  components: {
-    UiButton,
-    MeetupCover,
-    MeetupInfo,
-    UiContainer,
-  },
-
-  props: {
-    meetup: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  setup() {
-    // TODO: Добавить обработку кнопок, включая работу с API
-    /*
-      TODO: Добавить тосты при успешных операциях
-            - Митап удалён
-            - Сохранено
-            - Текст ошибки в случае ошибки на API
-     */
-    // TODO: Будет плюсом блокировать кнопку на время загрузки
-  },
-};
+// TODO: Добавить обработку кнопок, включая работу с API
+/*
+  TODO: Добавить тосты при успешных операциях
+        - Митап удалён
+        - Сохранено
+        - Текст ошибки в случае ошибки на API
+ */
+// TODO: Будет плюсом блокировать кнопку на время загрузки
+defineProps<{ meetup: TMeetup }>();
 </script>
 
 <style scoped>
@@ -65,9 +47,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 48px 0 0;
-}
-
-.meetup__content {
 }
 
 .meetup__aside {

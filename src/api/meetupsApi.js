@@ -13,7 +13,8 @@ export function getMeetups() {
  * @param {number} id
  * @returns {Promise<ResultContainer<Meetup>>}
  */
-export function getMeetup(id) {
+export async function getMeetup(id) {
+  // await new Promise((res) => setTimeout(res, 3000));
   return httpClient.get(`/meetups/${id}`);
 }
 

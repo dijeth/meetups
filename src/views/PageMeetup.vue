@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, watch } from 'vue';
 import MeetupView from '../components/MeetupView.vue';
 import UiContainer from '../components/UiContainer.vue';
@@ -31,63 +31,26 @@ import UiTabs from '../components/UiTabs.vue';
 import UiTab from '../components/UiTab.vue';
 import { getMeetup } from '../api/meetupsApi.js';
 
-export default {
-  name: 'PageMeetup',
+// TODO: Установить <title> - "<название митапа> | Meetups"
 
-  components: {
-    UiTab,
-    UiTabs,
-    MeetupView,
-    UiAlert,
-    UiContainer,
-  },
+const props = defineProps<{ meetupId: number }>();
 
-  async beforeRouteEnter(to) {
-    const result = await getMeetup(+to.params.meetupId);
-    if (result.success) {
-      return (vm) => {
-        vm.setMeetup(result.data);
-      };
-    } else {
-      return { name: 'meetups' };
-    }
-  },
+const meetup = ref(null);
+const error = ref(null);
 
-  props: {
-    meetupId: {
-      type: Number,
-      required: true,
-    },
-  },
+const fetchMeetup = async () => {
+  meetup.value = null;
+  error.value = null;
 
-  setup(props) {
-    // TODO: Установить <title> - "<название митапа> | Meetups"
-    const meetup = ref(null);
-    const error = ref(null);
-
-    const fetchMeetup = async () => {
-      meetup.value = null;
-      error.value = null;
-
-      const result = await getMeetup(props.meetupId);
-      if (result.success) {
-        meetup.value = result.data;
-      } else {
-        error.value = result.error.message;
-      }
-    };
-
-    watch(() => props.meetupId, fetchMeetup);
-
-    const setMeetup = (value) => (meetup.value = value);
-
-    return {
-      meetup,
-      error,
-      setMeetup,
-    };
-  },
+  const result = await getMeetup(props.meetupId);
+  if (result.success) {
+    meetup.value = result.data;
+  } else {
+    error.value = result.error.message;
+  }
 };
+
+watch(() => props.meetupId, fetchMeetup, { immediate: true });
 </script>
 
 <style scoped></style>

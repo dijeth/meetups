@@ -1,13 +1,11 @@
 <template>
-  <div>Task UiTabs</div>
+  <RouterLink :to="to" class="tabs__tab" exact-active-class="tabs__tab_active" role="tab"><slot /></RouterLink>
 </template>
 
-<script>
-// TODO: Task UiTabs
+<script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router';
 
-export default {
-  name: 'UiTab',
-};
+defineProps<{ to: RouteLocationRaw }>();
 </script>
 
 <style scoped>
