@@ -2,7 +2,7 @@
   <LayoutBase>
     <RouterView v-if="isLoaded">
       <template #default="{ Component }">
-        <KeepAlive v-if="Component" :max="3">
+        <KeepAlive v-if="Component" :max="3" exclude="PageMeetup">
           <component :is="Component" />
         </KeepAlive>
       </template>
