@@ -38,16 +38,16 @@
       </div>
     </div>
 
-    <KeepAlive v-if="meetups" include="MeetupsCalendar">
+    <UiAlert v-if="isLoading">Загрузка...</UiAlert>
+    <KeepAlive v-else include="MeetupsCalendar">
       <component :is="viewComponent" v-if="filteredMeetups.length" :meetups="filteredMeetups" />
       <UiAlert v-else>Митапов по заданным условиям не найдено...</UiAlert>
     </KeepAlive>
-    <UiAlert v-else>Загрузка...</UiAlert>
   </UiContainer>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
 import UiButtonGroup from '../components/UiButtonGroup.vue';
@@ -58,22 +58,17 @@ import UiButtonGroupItem from '../components/UiButtonGroupItem.vue';
 import UiFormGroup from '../components/UiFormGroup.vue';
 import UiInput from '../components/UiInput.vue';
 import UiTransitionGroupFade from '../components/UiTransitionGroupFade.vue';
-import { useMeetupsFetch } from '../composables/useMeetupsFetch.js';
 import { useQuerySync } from '../composables/useQuerySync';
 import type { TMeetup } from '../types';
 import MeetupsList from '../components/MeetupsList.vue';
+import { useApi } from '../composables/useApi';
+import { getMeetups } from '../api/meetupsApi';
 
 const dateFilterOptions = [
   { text: 'Все', value: 'all' },
   { text: 'Прошедшие', value: 'past' },
   { text: 'Ожидаемые', value: 'future' },
 ];
-
-const { meetups } = useMeetupsFetch();
-const view = useQuerySync('view', 'list');
-const search = useQuerySync('search', '');
-const date = useQuerySync('date', 'all');
-const participation = useQuerySync('participation', 'all');
 
 const dateFilter = (meetup: TMeetup) =>
   date.value === 'all' ||
@@ -91,11 +86,18 @@ const searchFilter = (meetup: TMeetup) =>
     .toLowerCase()
     .includes(search.value.toLowerCase());
 
+const { request, result, isLoading } = useApi<TMeetup[]>(getMeetups);
+const meetups = computed(() => (result.value && result.value.success ? result.value.data : []));
+const view = useQuerySync('view', 'list');
+const search = useQuerySync('search', '');
+const date = useQuerySync('date', 'all');
+const participation = useQuerySync('participation', 'all');
+const viewComponent = computed(() => (view.value === 'list' ? MeetupsList : MeetupsCalendar));
 const filteredMeetups = computed(() =>
   meetups.value.filter((meetup: TMeetup) => dateFilter(meetup) && participationFilter(meetup) && searchFilter(meetup)),
 );
 
-const viewComponent = computed(() => (view.value === 'list' ? MeetupsList : MeetupsCalendar));
+onMounted(() => request());
 </script>
 
 <style scoped>

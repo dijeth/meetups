@@ -1,25 +1,12 @@
-import { ref } from 'vue';
+import type { ResultContainer } from 'src/api/httpClient/ResultContainer';
+import { ref, type Ref } from 'vue';
 
-/*
-  TODO: Реализовать компосабл для отправки запросов
-        - Подразумевается, что в нём будут использоваться функции, возвращающие промис с ResultContainer
-        - Но вы можете использовать и другой подход
-        - Task composition/useApi
- */
-
-/**
- * @template T
- * @typedef {function(...[*]): Promise<ResultContainer<T>>} IApiFunction
- */
-
-/**
- * @template T
- * @template {IApiFunction<T>} K
- * @typedef IUseApiReturn
- * @param {Ref<ResultContainer<T>>} result - Реактивный результат
- * @param {Ref<boolean>} isLoading - Реактивный флаг загрузки
- * @param {K} request - Функция запуска запроса
- */
+export type TApiFunction<T> = (...args: any[]) => Promise<ResultContainer<T>>;
+export type TApiReturn<T> = {
+  isLoading: Ref<boolean>;
+  result: Ref<ResultContainer<T> | undefined>;
+  request: TApiFunction<T>;
+};
 
 /**
  * Компосабл для выполнения запросов в компонентах
@@ -35,11 +22,22 @@ import { ref } from 'vue';
  * @param {boolean|string=false} [options.errorToast] - В случае неуспешного запроса показывать ли текст из ответа (true) или конкретную строку (string)
  * @return {IUseApiReturn<T, typeof apiFunc>}
  */
-export function useApi(apiFunc, { showProgress = false, successToast = false, errorToast = false } = {}) {
-  const result = ref(null);
-  const isLoading = ref(false);
+export function useApi<T>(
+  apiFunction: TApiFunction<T>,
+  { showProgress = false, successToast = false, errorToast = false } = {},
+): TApiReturn<T> {
+  // TODO: add integration for toast and progress
+  const result = ref<ResultContainer<T>>();
+  const isLoading = ref<boolean>(false);
 
-  const request = async (...args) => {};
+  const request = async (...args: any[]) => {
+    isLoading.value = true;
+    result.value = undefined;
+    result.value = await apiFunction(...args);
+    isLoading.value = false;
+
+    return result.value;
+  };
 
   return {
     request,
