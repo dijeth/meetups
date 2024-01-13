@@ -4,42 +4,22 @@
     class="button"
     :class="{ [`button_${variant}`]: true, button_block: block }"
     :type="tag === 'button' ? 'button' : undefined"
-    ><slot
-  /></component>
+  >
+    <slot />
+  </component>
 </template>
 
+<script lang="ts">
+export type UiButtonProps = {
+  tag?: string | Component;
+  variant?: 'primary' | 'secondary' | 'danger';
+  block?: boolean;
+};
+</script>
+
 <script lang="ts" setup>
-import { computed, useAttrs } from 'vue';
-
-const attributes = useAttrs();
-const props = defineProps({
-  tag: {
-    type: [String, Object],
-    default: 'button',
-  },
-
-  variant: {
-    type: String,
-    default: 'secondary',
-    validate(value: string) {
-      return ['primary', 'secondary', 'danger'].includes(value);
-    },
-  },
-
-  block: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-const attrs = computed(() =>
-  props.tag !== 'button'
-    ? attributes
-    : {
-        type: 'button',
-        ...attributes,
-      },
-);
+import type { Component } from 'vue';
+withDefaults(defineProps<UiButtonProps>(), { tag: 'button', variant: 'secondary', block: false });
 </script>
 
 <style scoped>
@@ -59,6 +39,12 @@ const attrs = computed(() =>
   background-color: transparent;
   cursor: pointer;
   text-decoration: none;
+}
+
+.button:disabled {
+  color: var(--white);
+  background-color: var(--grey);
+  border-color: var(--grey);
 }
 
 .button.button_block {

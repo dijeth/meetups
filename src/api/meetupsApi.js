@@ -42,7 +42,7 @@ export function putMeetup(meetup) {
  * @returns {Promise<ResultContainer<void>>}
  */
 export function deleteMeetup(id) {
-  // TODO: реализовать функцию
+  return httpClient.delete(`/meetups/${id}`);
 }
 
 /**
@@ -50,8 +50,9 @@ export function deleteMeetup(id) {
  * @param {number} id
  * @returns {Promise<ResultContainer<void>>}
  */
-export function attendMeetup(id) {
-  // TODO: реализовать функцию
+export async function attendMeetup(id) {
+  // await new Promise((res) => setTimeout(res, 3000));
+  return httpClient.post(`/meetups/${id}/participation`);
 }
 
 /**
@@ -60,5 +61,5 @@ export function attendMeetup(id) {
  * @returns {Promise<ResultContainer<void>>}
  */
 export function leaveMeetup(id) {
-  // TODO: реализовать функцию
+  return httpClient.delete(`/meetups/${id}/participation`);
 }

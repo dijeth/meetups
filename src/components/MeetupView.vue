@@ -10,17 +10,7 @@
         <div class="meetup__aside">
           <MeetupInfo :organizer="meetup.organizer" :place="meetup.place" :date="meetup.date" />
           <div class="meetup__aside-buttons">
-            <!-- TODO: Может добавить тут слот? -->
-            <UiButton
-              v-for="{ key, title, variant, tag, to, onClick } in userButtons"
-              :variant="variant"
-              class="meetup__aside-button"
-              :key="key"
-              :tag="tag"
-              :to="to"
-              @click="onClick"
-              >{{ title }}
-            </UiButton>
+            <slot name="action-buttons" />
           </div>
         </div>
       </div>
@@ -32,20 +22,10 @@
 import MeetupCover from './MeetupCover.vue';
 import MeetupInfo from './MeetupInfo.vue';
 import UiContainer from './UiContainer.vue';
-import UiButton from './UiButton.vue';
 import type { TMeetup } from 'src/types';
 import { useAuthStore } from '../stores/useAuthStore';
 import { computed } from 'vue';
 import { RouterLink, type RouteLocationRaw } from 'vue-router';
-
-// TODO: Добавить обработку кнопок, включая работу с API
-/*
-  TODO: Добавить тосты при успешных операциях
-        - Митап удалён
-        - Сохранено
-        - Текст ошибки в случае ошибки на API
- */
-// TODO: Будет плюсом блокировать кнопку на время загрузки
 
 const props = defineProps<{ meetup: TMeetup }>();
 const { isAuthenticated } = useAuthStore();
