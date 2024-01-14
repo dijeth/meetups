@@ -2,75 +2,59 @@
   <div class="progress" :class="{ show, failed }" :style="{ width: currentProgress + '%' }"></div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useGsap } from './useGsap.js';
+import { useGsap } from './useGsap';
 
 const START_DELAY = 0.2;
 const MAX_PROGRESS = 95;
 const MAX_DURATION = 30;
 const FINISH_DURATION = 0.5;
 
-export default {
-  name: 'TheTopProgressBar',
+const currentProgress = ref(0);
+const failed = ref(false);
+const show = computed(() => currentProgress.value > 0);
 
-  expose: ['start', 'finish', 'fail'],
+const progressTween = useGsap(currentProgress, { duration: MAX_DURATION, delay: START_DELAY, ease: 'expo.out' });
+const finishTween = useGsap(currentProgress, { duration: FINISH_DURATION });
 
-  setup() {
-    const currentProgress = ref(0);
-    const failed = ref(false);
-    const show = computed(() => currentProgress.value > 0);
+let loaders = new Set<string>();
 
-    const progressTween = useGsap(currentProgress, { duration: MAX_DURATION, delay: START_DELAY, ease: 'expo.out' });
-    const finishTween = useGsap(currentProgress, { duration: FINISH_DURATION });
-
-    let loaders = new Set();
-
-    const reset = () => {
-      failed.value = false;
-      currentProgress.value = 0;
-    };
-
-    const start = (loader) => {
-      if (loaders.size === 0) {
-        progressTween.start({ to: MAX_PROGRESS });
-      }
-      loaders.add(loader);
-    };
-
-    const finish = (loader) => {
-      if (loaders.size === 0) {
-        return;
-      }
-      if (loader !== undefined) {
-        loaders.delete(loader);
-      } else {
-        loaders.clear();
-      }
-      if (loaders.size === 0) {
-        progressTween.getTween().kill();
-        if (show.value) {
-          progressTween.getTween().kill();
-          finishTween.start({ to: 100 }).then(reset);
-        }
-      }
-    };
-
-    const fail = () => {
-      failed.value = true;
-      finish();
-    };
-
-    return {
-      currentProgress,
-      failed,
-      show,
-      start,
-      finish,
-      fail,
-    };
-  },
+const reset = () => {
+  failed.value = false;
+  currentProgress.value = 0;
 };
+
+const start = (loader: string) => {
+  if (loaders.size === 0) {
+    progressTween.start({ to: MAX_PROGRESS });
+  }
+  loaders.add(loader);
+};
+
+const finish = (loader?: string) => {
+  if (loaders.size === 0) {
+    return;
+  }
+  if (loader !== undefined) {
+    loaders.delete(loader);
+  } else {
+    loaders.clear();
+  }
+  if (loaders.size === 0) {
+    progressTween.getTween().kill();
+    if (show.value) {
+      finishTween.start({ to: 100 }).then(reset);
+    }
+  }
+};
+
+const fail = () => {
+  failed.value = true;
+  finish();
+};
+
+defineExpose({ start, finish, fail });
 </script>
 
 <style scoped>

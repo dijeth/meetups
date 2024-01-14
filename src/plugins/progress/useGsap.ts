@@ -1,16 +1,11 @@
 import { gsap } from 'gsap';
+import type { Ref } from 'vue';
 
-/**
- * @typedef Tween {GSAPTween}
- *
- * @param {import('vue').Ref} tweenedRef - ref to be tweened
- * @param {import('gsap').TweenVars} options - gsap TweenVars options
- * @return {{ start: ({ from, to }) => Tween, getTween: () => Tween }}
- */
-export function useGsap(tweenedRef, options) {
-  let tween;
+export function useGsap(tweenedRef: Ref<GSAPTweenTarget | number>, options: GSAPTweenVars) {
+  let tween: GSAPTween;
+
   return {
-    start({ from, to }) {
+    start({ from, to }: { from?: number; to?: number }) {
       if (tween) {
         tween.kill();
       }
@@ -23,8 +18,6 @@ export function useGsap(tweenedRef, options) {
       }
       return tween;
     },
-    // from: () => {},
-    // fromTo: () => {},
     getTween: () => tween,
   };
 }
