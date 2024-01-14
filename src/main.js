@@ -9,9 +9,10 @@ import { router } from './router/index.js';
 import { createPinia } from 'pinia';
 import { useAuthStore } from './stores/useAuthStore';
 import { createToaster } from './plugins/toaster';
+import { createProgress } from './plugins/progress';
 
-// TODO: установить плагины: head(title), progress
-createApp(App).use(router).use(createPinia()).use(createToaster()).mount('#app');
+// TODO: установить плагины: head(title)
+createApp(App).use(router).use(createPinia()).use(createToaster()).use(createProgress()).mount('#app');
 
 // В этом же файле при необходимости можно сделать всё, что требуется делать ещё до создания приложения,
 // или что не относится к Vue приложению и UI

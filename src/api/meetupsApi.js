@@ -1,10 +1,14 @@
+import { createErrorResult } from './httpClient/ResultContainer';
 import { httpClient } from './httpClient/httpClient.js';
+
+// TODO: remove manual test mocks
 
 /**
  * Получить список всех митапов
  * @returns {Promise<ResultContainer<Meetup[]>>}
  */
-export function getMeetups() {
+export async function getMeetups() {
+  // await new Promise((res) => setTimeout(res, 3000));
   return httpClient.get('/meetups');
 }
 
@@ -51,7 +55,8 @@ export function deleteMeetup(id) {
  * @returns {Promise<ResultContainer<void>>}
  */
 export async function attendMeetup(id) {
-  // await new Promise((res) => setTimeout(res, 3000));
+  await new Promise((res) => setTimeout(res, 3000));
+  // return createErrorResult({ message: 'Uuups' }, {});
   return httpClient.post(`/meetups/${id}/participation`);
 }
 
@@ -60,6 +65,7 @@ export async function attendMeetup(id) {
  * @param {number} id
  * @returns {Promise<ResultContainer<void>>}
  */
-export function leaveMeetup(id) {
+export async function leaveMeetup(id) {
+  await new Promise((res) => setTimeout(res, 3000));
   return httpClient.delete(`/meetups/${id}/participation`);
 }

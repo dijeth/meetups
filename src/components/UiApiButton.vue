@@ -10,9 +10,15 @@ import { type UiButtonProps } from './UiButton.vue';
 import UiButton from './UiButton.vue';
 import { watch, watchEffect } from 'vue';
 
-const props = defineProps<UiButtonProps & { apiFunction: TApiFunction<void> }>();
+const props = defineProps<
+  UiButtonProps & { apiFunction: TApiFunction<void>; successMessage?: string; errorMessage?: string }
+>();
 const emit = defineEmits(['success', 'error', 'loading']);
-const { request, result, isLoading } = useApi(props.apiFunction);
+const { request, result, isLoading } = useApi(props.apiFunction, {
+  showProgress: true,
+  successToast: props.successMessage,
+  errorToast: props.errorMessage,
+});
 
 watch(isLoading, () => {
   emit('loading', isLoading.value);

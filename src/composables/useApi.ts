@@ -1,5 +1,7 @@
 import type { ResultContainer } from 'src/api/httpClient/ResultContainer';
+import { useProgress, type TProgress } from '../plugins/progress';
 import { ref, type Ref } from 'vue';
+import { useToaster } from '../plugins/toaster';
 
 export type TApiFunction<T> = (...args: any[]) => Promise<ResultContainer<T>>;
 export type TApiReturn<T> = {
@@ -7,6 +9,7 @@ export type TApiReturn<T> = {
   result: Ref<ResultContainer<T> | undefined>;
   request: TApiFunction<T>;
 };
+export const API_NATIVE_ERROR = 'API_NATIVE_ERROR';
 
 /**
  * Компосабл для выполнения запросов в компонентах
@@ -24,16 +27,53 @@ export type TApiReturn<T> = {
  */
 export function useApi<T>(
   apiFunction: TApiFunction<T>,
-  { showProgress = false, successToast = false, errorToast = false } = {},
+  { showProgress = false, successToast = '', errorToast = '' } = {},
 ): TApiReturn<T> {
   // TODO: add integration for toast and progress
   const result = ref<ResultContainer<T>>();
   const isLoading = ref<boolean>(false);
+  const progress = useProgress();
+  const progressId = Date.now().toString();
+  const toaster = useToaster();
+
+  const startProgress = () => {
+    if (progress && showProgress) {
+      progress.start(progressId);
+    }
+  };
+  const finishProgress = () => {
+    if (progress && showProgress) {
+      progress.finish(progressId);
+    }
+  };
+  const failProgress = () => {
+    if (progress && showProgress) {
+      progress.fail();
+    }
+  };
+  const showSuccessToast = () => {
+    if (toaster && successToast) {
+      toaster.success(successToast);
+    }
+  };
+  const showErrorToast = (nativeError: string) => {
+    if (toaster && errorToast) {
+      toaster.error(errorToast === API_NATIVE_ERROR ? nativeError : errorToast);
+    }
+  };
 
   const request = async (...args: any[]) => {
     isLoading.value = true;
     result.value = undefined;
+    startProgress();
     result.value = await apiFunction(...args);
+    if (result.value.success) {
+      finishProgress();
+      showSuccessToast();
+    } else {
+      failProgress();
+      showErrorToast(result.value.error.message);
+    }
     isLoading.value = false;
 
     return result.value;
