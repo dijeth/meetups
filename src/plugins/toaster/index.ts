@@ -3,8 +3,13 @@ import TheToaster from './TheToaster.vue';
 
 export type TToaster = { success: (text: string) => void; error: (text: string) => void };
 export const TOASTER_KEY = Symbol('TOASTER_KEY');
-export function useToaster() {
-  return inject<TToaster>(TOASTER_KEY);
+export function useToaster(): TToaster {
+  const toaster = inject<TToaster>(TOASTER_KEY);
+  if (!toaster) {
+    throw new Error('Toaster has not installed yet');
+  }
+
+  return toaster;
 }
 
 export function createToaster({ container }: { container?: HTMLElement } = {}) {

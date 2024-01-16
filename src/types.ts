@@ -2,8 +2,8 @@ export type TMeetup = {
   id: number;
   title: string;
   description: string;
-  imageId: number;
-  image: string;
+  imageId?: number;
+  image?: string;
   date: number;
   organizer: string;
   place: string;
@@ -33,9 +33,13 @@ export type TAgendaItemType =
   | 'afterparty'
   | 'other';
 
+export type TAgendaDict = { [k in TAgendaItemType]: string };
+
 export type TUser = {
   id: number;
   email: string;
   fullname: string;
   avatar: string;
 };
+
+export type TImageDto = { id?: number; image?: string };

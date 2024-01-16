@@ -9,8 +9,13 @@ export type TProgress = {
 } & Plugin;
 
 export const PROGRESS_KEY = Symbol('PROGRESS_KEY');
-export function useProgress(): TProgress | undefined {
-  return inject<TProgress>(PROGRESS_KEY);
+export function useProgress(): TProgress {
+  const progress = inject<TProgress>(PROGRESS_KEY);
+  if (!progress) {
+    throw new Error('Progress plugin has not installed yet');
+  }
+
+  return progress;
 }
 
 export function createProgress({ container, router }: { container?: HTMLElement; router?: Router } = {}) {

@@ -1,9 +1,9 @@
-import type { TAgendaItemType } from './types';
+import type { TAgendaDict, TAgendaItemType } from './types';
 
 /**
  * Словарь заголовков по умолчанию для всех типов пунктов программы
  */
-export const AgendaItemDefaultTitle: { [k in TAgendaItemType]: string } = {
+export const AgendaItemDefaultTitle: TAgendaDict = {
   registration: 'Регистрация',
   opening: 'Открытие',
   break: 'Перерыв',
@@ -18,7 +18,7 @@ export const AgendaItemDefaultTitle: { [k in TAgendaItemType]: string } = {
  * Словарь иконок для всех типов пунктов программы.
  * Соответствует имени иконок в директории /assets/icons
  */
-export const AgendaItemIcon: { [k in TAgendaItemType]: string } = {
+export const AgendaItemIcon: TAgendaDict = {
   registration: 'key',
   opening: 'cal-sm',
   talk: 'tv',
@@ -28,3 +28,17 @@ export const AgendaItemIcon: { [k in TAgendaItemType]: string } = {
   afterparty: 'cal-sm',
   other: 'cal-sm',
 };
+
+export const AGENDA_ITEM_OPTIONS = (Object.entries(AgendaItemDefaultTitle) as [TAgendaItemType, string][]).map(
+  ([type, title]) => ({
+    value: type,
+    text: title,
+    icon: AgendaItemIcon[type],
+  }),
+);
+
+export const TALK_LANGUAGE_OPTIONS = [
+  { value: null, text: 'Не указано' },
+  { value: 'RU', text: 'RU' },
+  { value: 'EN', text: 'EN' },
+];

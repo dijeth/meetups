@@ -1,7 +1,7 @@
 <template>
-  <form class="meetup-form" @submit.prevent="handleSubmit">
+  <form class="meetup-form" @submit.prevent="handleSubmit" ref="formRef">
     <div class="meetup-form__content">
-      <fieldset class="meetup-form__section">
+      <fieldset class="meetup-form__section" :disabled="disabled">
         <UiFormGroup label="Название">
           <UiInput v-model="localMeetup.title" name="title" />
         </UiFormGroup>
@@ -18,8 +18,8 @@
           <UiImageUploader
             name="image"
             :preview="localMeetup.image"
-            @select="localMeetup.imageToUpload = $event"
-            @remove="localMeetup.imageId = localMeetup.imageToUpload = null"
+            @select="handleImageSelect"
+            @remove="handleImageRemove"
           />
         </UiFormGroup>
       </fieldset>
@@ -47,11 +47,19 @@
           block
           data-test="cancel"
           variant="secondary"
-          @click="$emit('cancel')"
+          @click="emit('cancel')"
+          :disabled="disabled"
         >
           Отмена
         </UiButton>
-        <UiButton variant="primary" block class="meetup-form__aside-button" type="submit" data-test="submit">
+        <UiButton
+          variant="primary"
+          block
+          class="meetup-form__aside-button"
+          type="submit"
+          data-test="submit"
+          :disabled="disabled"
+        >
           {{ submitText }}
         </UiButton>
       </div>
@@ -59,7 +67,7 @@
   </form>
 </template>
 
-<script>
+<script setup lang="ts">
 import { klona } from 'klona';
 import UiButton from './UiButton.vue';
 import UiFormGroup from './UiFormGroup.vue';
@@ -68,56 +76,53 @@ import UiInput from './UiInput.vue';
 import UiInputDate from './UiInputDate.vue';
 import MeetupAgendaItemForm from './MeetupAgendaItemForm.vue';
 import { createAgendaItem } from '../services/meetupService.js';
+import type { TMeetup } from 'src/types';
+import { ref } from 'vue';
 
-export default {
-  name: 'MeetupForm',
+const props = withDefaults(
+  defineProps<{
+    meetup: TMeetup;
+    submitText?: string;
+    disabled?: boolean;
+  }>(),
+  { submitText: 'Ok', disabled: false },
+);
 
-  components: {
-    MeetupAgendaItemForm,
-    UiButton,
-    UiFormGroup,
-    UiImageUploader,
-    UiInput,
-    UiInputDate,
-  },
+const emit = defineEmits(['submit', 'cancel']);
 
-  props: {
-    meetup: {
-      type: Object,
-      required: true,
-    },
+const localMeetup = ref<TMeetup & { imageFile?: File }>(klona(props.meetup));
+const formRef = ref<HTMLFormElement>();
 
-    submitText: {
-      type: String,
-      default: '',
-    },
-  },
+const addAgendaItem = () => {
+  const newItem = createAgendaItem();
 
-  emits: ['submit', 'cancel'],
+  if (localMeetup.value.agenda.length) {
+    newItem.startsAt = localMeetup.value.agenda[localMeetup.value.agenda.length - 1].endsAt;
+  }
+  localMeetup.value.agenda.push(newItem);
+};
 
-  data() {
-    return {
-      localMeetup: klona(this.meetup),
-    };
-  },
+const removeAgendaItem = (index: number) => {
+  localMeetup.value.agenda.splice(index, 1);
+};
 
-  methods: {
-    addAgendaItem() {
-      const newItem = createAgendaItem();
-      if (this.localMeetup.agenda.length) {
-        newItem.startsAt = this.localMeetup.agenda[this.localMeetup.agenda.length - 1].endsAt;
-      }
-      this.localMeetup.agenda.push(newItem);
-    },
+const handleSubmit = () => {
+  const file = localMeetup.value.imageFile;
+  const meetup = klona(localMeetup.value);
+  delete meetup.imageFile;
 
-    removeAgendaItem(index) {
-      this.localMeetup.agenda.splice(index, 1);
-    },
+  emit('submit', meetup, file);
+};
 
-    handleSubmit() {
-      this.$emit('submit', klona(this.localMeetup));
-    },
-  },
+const handleImageSelect = (file: File) => {
+  localMeetup.value.image = undefined;
+  localMeetup.value.imageId = undefined;
+  localMeetup.value.imageFile = file;
+};
+const handleImageRemove = () => {
+  localMeetup.value.image = undefined;
+  localMeetup.value.imageId = undefined;
+  localMeetup.value.imageFile = undefined;
 };
 </script>
 

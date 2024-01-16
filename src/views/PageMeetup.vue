@@ -21,7 +21,7 @@
           variant="danger"
           :api-function="() => deleteMeetup(result!.data!.id)"
           success-message="Митап удален"
-          :error-message="API_NATIVE_ERROR"
+          :error-message="API_NATIVE_RESPONSE"
           :disabled="disabled"
           @loading="loadingHandler"
           @success="deleteSuccessHandler"
@@ -32,7 +32,7 @@
           variant="primary"
           :api-function="() => attendMeetup(result!.data!.id)"
           success-message="Сохранено"
-          :error-message="API_NATIVE_ERROR"
+          :error-message="API_NATIVE_RESPONSE"
           :disabled="disabled"
           @loading="loadingHandler"
           @success="successHandler"
@@ -43,7 +43,7 @@
           variant="secondary"
           :api-function="() => leaveMeetup(result!.data!.id)"
           success-message="Сохранено"
-          :error-message="API_NATIVE_ERROR"
+          :error-message="API_NATIVE_RESPONSE"
           :disabled="disabled"
           @loading="loadingHandler"
           @success="successHandler"
@@ -70,7 +70,7 @@ import UiAlert from '../components/UiAlert.vue';
 import UiTabs from '../components/UiTabs.vue';
 import UiTab from '../components/UiTab.vue';
 import { attendMeetup, getMeetup, leaveMeetup, deleteMeetup } from '../api/meetupsApi.js';
-import { API_NATIVE_ERROR, useApi } from '../composables/useApi';
+import { API_NATIVE_RESPONSE, useApi } from '../composables/useApi';
 import type { TMeetup } from 'src/types';
 import UiApiButton from '../components/UiApiButton.vue';
 import UiButton from '../components/UiButton.vue';

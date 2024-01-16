@@ -14,7 +14,7 @@
     <component
       :value="modelValue"
       :is="multiline ? 'textarea' : 'input'"
-      :ref="inputRef"
+      ref="inputRef"
       class="form-control"
       :class="{ ['form-control_rounded']: rounded, ['form-control_sm']: small }"
       v-bind="attrs"

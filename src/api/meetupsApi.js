@@ -27,8 +27,9 @@ export async function getMeetup(id) {
  * @param {Object} meetup
  * @returns {Promise<ResultContainer<Meetup>>}
  */
-export function postMeetup(meetup) {
-  // TODO: реализовать функцию
+export async function postMeetup(meetup) {
+  // await new Promise((res) => setTimeout(res, 3000));
+  return httpClient.post('/meetups/', meetup);
 }
 
 /**

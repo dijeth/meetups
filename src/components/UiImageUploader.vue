@@ -1,21 +1,99 @@
 <template>
-  <div>Task 06-wrappers/05-UiImageUploader</div>
+  <div class="image-uploader">
+    <label
+      class="image-uploader__preview"
+      :class="{ 'image-uploader__preview-loading': state === StateType.UPLOADING }"
+      :style="state === StateType.UPLOADED ? `--bg-url: url('${image}')` : ''"
+      @click="clickHandler"
+    >
+      <span class="image-uploader__text">{{ title }}</span>
+      <input
+        type="file"
+        accept="image/*"
+        class="image-uploader__input"
+        v-bind="$attrs"
+        ref="inputRef"
+        @change="changeHandler"
+      />
+    </label>
+  </div>
 </template>
 
-<script>
-// TODO: Task 06-wrappers/05-UiImageUploader
+<script setup lang="ts">
+import { computed, ref } from 'vue';
 
-export default {
-  name: 'UiImageUploader',
+const StateType = {
+  UPLOADING: 'UPLOADING',
+  UPLOADED: 'UPLOADED',
+  EMPTY: 'EMPTY',
+} as const;
+
+const props = defineProps<{
+  preview?: string;
+  uploader?: (f: File) => Promise<any>;
+}>();
+
+defineOptions({ inheritAttrs: false });
+const emit = defineEmits(['select', 'upload', 'error', 'remove']);
+
+const state = ref<(typeof StateType)[keyof typeof StateType]>(props.preview ? StateType.UPLOADED : StateType.EMPTY);
+const image = ref<string>(props.preview || '');
+const inputRef = ref<HTMLInputElement>();
+
+const title = computed((): string => {
+  switch (state.value) {
+    case StateType.EMPTY:
+      return 'Загрузить изображение';
+
+    case StateType.UPLOADING:
+      return 'Загрузка...';
+
+    default:
+    case StateType.UPLOADED:
+      return 'Удалить изображение';
+  }
+});
+
+const clickHandler = computed(() => {
+  return state.value === StateType.UPLOADED ? removeHandler : undefined;
+});
+
+const removeHandler = (event: MouseEvent) => {
+  event.preventDefault();
+  state.value = StateType.EMPTY;
+  inputRef.value!.value = '';
+  emit('remove');
+};
+
+const changeHandler = async (event: Event) => {
+  const { files } = event.target as HTMLInputElement;
+  if (!files) {
+    return;
+  }
+
+  image.value = URL.createObjectURL(files[0]);
+  emit('select', files[0]);
+
+  if (!props.uploader) {
+    state.value = StateType.UPLOADED;
+    return;
+  }
+
+  const storedState = state.value;
+  state.value = StateType.UPLOADING;
+  try {
+    const response = await props.uploader(files[0]);
+    state.value = StateType.UPLOADED;
+    emit('upload', response);
+  } catch (err) {
+    inputRef.value!.value = '';
+    state.value = storedState;
+    emit('error', err);
+  }
 };
 </script>
 
 <style scoped>
-/* _image-uploader.css */
-
-.image-uploader {
-}
-
 .image-uploader__input {
   opacity: 0;
   height: 0;

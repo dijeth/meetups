@@ -9,7 +9,7 @@ export type TApiReturn<T> = {
   result: Ref<ResultContainer<T> | undefined>;
   request: TApiFunction<T>;
 };
-export const API_NATIVE_ERROR = 'API_NATIVE_ERROR';
+export const API_NATIVE_RESPONSE = 'API_NATIVE_RESPONSE';
 
 /**
  * Компосабл для выполнения запросов в компонентах
@@ -27,13 +27,12 @@ export const API_NATIVE_ERROR = 'API_NATIVE_ERROR';
  */
 export function useApi<T>(
   apiFunction: TApiFunction<T>,
-  { showProgress = false, successToast = '', errorToast = '' } = {},
+  { showProgress = false, successToast = '', errorToast = '', progressKey = '' } = {},
 ): TApiReturn<T> {
-  // TODO: add integration for toast and progress
   const result = ref<ResultContainer<T>>();
   const isLoading = ref<boolean>(false);
   const progress = useProgress();
-  const progressId = Date.now().toString();
+  const progressId = progressKey || Date.now().toString();
   const toaster = useToaster();
 
   const startProgress = () => {
@@ -58,7 +57,7 @@ export function useApi<T>(
   };
   const showErrorToast = (nativeError: string) => {
     if (toaster && errorToast) {
-      toaster.error(errorToast === API_NATIVE_ERROR ? nativeError : errorToast);
+      toaster.error(errorToast === API_NATIVE_RESPONSE ? nativeError : errorToast);
     }
   };
 
