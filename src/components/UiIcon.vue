@@ -2,7 +2,28 @@
   <img class="icon" :alt="icon" :src="iconSrc" />
 </template>
 
-<script>
+<script lang="ts">
+export type TIconType =
+  | 'alert-circle'
+  | 'cal-sm'
+  | 'cal-lg'
+  | 'check'
+  | 'check-circle'
+  | 'chevron-down'
+  | 'clock'
+  | 'coffee'
+  | 'key'
+  | 'list'
+  | 'map'
+  | 'pen-tool'
+  | 'pill-active'
+  | 'search'
+  | 'trash'
+  | 'tv'
+  | 'user';
+</script>
+
+<script setup lang="ts">
 import AlertCircle from '../assets/icons/icon-alert-circle.svg';
 import CalSm from '../assets/icons/icon-cal-sm.svg';
 import CalLg from '../assets/icons/icon-cal-lg.svg';
@@ -20,44 +41,34 @@ import Search from '../assets/icons/icon-search.svg';
 import Trash from '../assets/icons/icon-trash.svg';
 import Tv from '../assets/icons/icon-tv.svg';
 import User from '../assets/icons/icon-user.svg';
+import { ref, watchEffect } from 'vue';
 
-const icons = {
-  'alert-circle': AlertCircle,
-  'cal-sm': CalSm,
-  'cal-lg': CalLg,
-  check: Check,
-  'check-circle': CheckCircle,
-  'chevron-down': ChevronDown,
-  clock: Clock,
-  coffee: Coffee,
-  key: Key,
-  list: List,
-  map: Map,
-  'pen-tool': PenTool,
-  'pill-active': PillActive,
-  search: Search,
-  trash: Trash,
-  tv: Tv,
-  user: User,
+const IconSvg: { [k in TIconType]: string } = {
+  ['alert-circle']: AlertCircle,
+  ['cal-sm']: CalSm,
+  ['cal-lg']: CalLg,
+  ['check']: Check,
+  ['check-circle']: CheckCircle,
+  ['chevron-down']: ChevronDown,
+  ['clock']: Clock,
+  ['coffee']: Coffee,
+  ['key']: Key,
+  ['list']: List,
+  ['map']: Map,
+  ['pen-tool']: PenTool,
+  ['pill-active']: PillActive,
+  ['search']: Search,
+  ['trash']: Trash,
+  ['tv']: Tv,
+  ['user']: User,
 };
 
-export default {
-  name: 'UiIcon',
+const props = defineProps<{ icon: TIconType }>();
+const iconSrc = ref<string>(IconSvg[props.icon]);
 
-  props: {
-    icon: {
-      type: String,
-      required: true,
-      validator: (name) => Object.keys(icons).includes(name),
-    },
-  },
-
-  computed: {
-    iconSrc() {
-      return icons[this.icon];
-    },
-  },
-};
+watchEffect(() => {
+  iconSrc.value = IconSvg[props.icon];
+});
 </script>
 
 <style scoped>

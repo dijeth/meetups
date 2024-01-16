@@ -1,7 +1,7 @@
 <template>
   <div class="agenda-item">
     <div class="agenda-item__col">
-      <img :src="icon" class="icon" :alt="iconKey" />
+      <UiIcon :icon="icon" />
     </div>
     <div class="agenda-item__col">{{ time }}</div>
     <div class="agenda-item__col">
@@ -20,12 +20,11 @@
 import type { TAgendaItem } from 'src/types';
 import { computed } from 'vue';
 import { AgendaItemDefaultTitle, AgendaItemIcon } from '../const';
+import UiIcon from './UiIcon.vue';
 
-// TODO: add <UiIcon> component
 const props = defineProps<{ data: TAgendaItem }>();
 const time = computed(() => `${props.data.startsAt} - ${props.data.endsAt}`);
-const icon = computed(() => `/assets/icons/icon-${AgendaItemIcon[props.data.type]}.svg`);
-const iconKey = computed(() => AgendaItemIcon[props.data.type]);
+const icon = computed(() => AgendaItemIcon[props.data.type]);
 const title = computed(() => props.data.title || AgendaItemDefaultTitle[props.data.type]);
 </script>
 

@@ -1,4 +1,7 @@
-import type { TAgendaDict, TAgendaItemType } from './types';
+import UiDropdown from './components/UiDropdown.vue';
+import type { TIconType } from './components/UiIcon.vue';
+import UiInput from './components/UiInput.vue';
+import type { TAgendaDict, TAgendaItemType, TFormSchema } from './types';
 
 /**
  * Словарь заголовков по умолчанию для всех типов пунктов программы
@@ -18,7 +21,7 @@ export const AgendaItemDefaultTitle: TAgendaDict = {
  * Словарь иконок для всех типов пунктов программы.
  * Соответствует имени иконок в директории /assets/icons
  */
-export const AgendaItemIcon: TAgendaDict = {
+export const AgendaItemIcon: { [k in TAgendaItemType]: TIconType } = {
   registration: 'key',
   opening: 'cal-sm',
   talk: 'tv',
@@ -42,3 +45,61 @@ export const TALK_LANGUAGE_OPTIONS = [
   { value: 'RU', text: 'RU' },
   { value: 'EN', text: 'EN' },
 ];
+
+export const commonAgendaItemFormSchema: TFormSchema = {
+  title: {
+    label: 'Нестандартный текст (необязательно)',
+    component: UiInput,
+    props: {},
+  },
+};
+
+export const FormSchema: Record<TAgendaItemType, TFormSchema> = {
+  registration: commonAgendaItemFormSchema,
+  opening: commonAgendaItemFormSchema,
+  break: commonAgendaItemFormSchema,
+  coffee: commonAgendaItemFormSchema,
+  closing: commonAgendaItemFormSchema,
+  afterparty: commonAgendaItemFormSchema,
+  talk: {
+    title: {
+      label: 'Тема',
+      component: UiInput,
+      props: {},
+    },
+    speaker: {
+      label: 'Докладчик',
+      component: UiInput,
+      props: {},
+    },
+    description: {
+      label: 'Описание',
+      component: UiInput,
+      props: {
+        multiline: true,
+      },
+    },
+    language: {
+      label: 'Язык',
+      component: UiDropdown,
+      props: {
+        options: TALK_LANGUAGE_OPTIONS,
+        title: 'Язык',
+      },
+    },
+  },
+  other: {
+    title: {
+      label: 'Заголовок',
+      component: UiInput,
+      props: {},
+    },
+    description: {
+      label: 'Описание',
+      component: UiInput,
+      props: {
+        multiline: true,
+      },
+    },
+  },
+};

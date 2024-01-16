@@ -1,3 +1,5 @@
+import type { Component } from 'vue';
+
 export type TMeetup = {
   id: number;
   title: string;
@@ -43,3 +45,11 @@ export type TUser = {
 };
 
 export type TImageDto = { id?: number; image?: string };
+
+export type TInputSchema = {
+  component: string | Component;
+  label: string;
+  props: Record<string, any>;
+};
+
+export type TFormSchema = Record<string, TInputSchema>;

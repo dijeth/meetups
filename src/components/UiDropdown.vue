@@ -1,17 +1,66 @@
 <template>
-  <div>Task 04-vue-cli/04-UiDropdown1</div>
+  <div class="dropdown" :class="{ dropdown_opened: isOpened }">
+    <button
+      type="button"
+      class="dropdown__toggle"
+      :class="{ dropdown__toggle_icon: hasIcon }"
+      @click="isOpened = !isOpened"
+    >
+      <UiIcon v-if="value?.icon" :icon="value.icon" class="dropdown__icon" />
+      <span>{{ value?.text || title }}</span>
+    </button>
+
+    <div v-show="isOpened" class="dropdown__menu" role="listbox">
+      <button
+        v-for="option in options"
+        class="dropdown__item"
+        :class="{ dropdown__item_icon: hasIcon }"
+        :key="option.value"
+        @click="selectItem(option.value)"
+        role="option"
+        type="button"
+      >
+        <UiIcon v-if="option.icon" :icon="option.icon" class="dropdown__icon" />
+        {{ option.text }}
+      </button>
+    </div>
+
+    <select
+      v-show="false"
+      :value="value?.value"
+      :text="value?.text"
+      @change="selectItem(($event.target as HTMLSelectElement).value)"
+    >
+      <option v-for="option in options" :value="option.value" :key="option.value">{{ option.text }}</option>
+    </select>
+  </div>
 </template>
 
-<script>
-// TODO: Task 04-vue-cli/04-UiDropdown1
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import UiIcon, { type TIconType } from './UiIcon.vue';
 
-export default {
-  name: 'UiDropdown',
+type TItem = { value: string; text: string; icon?: TIconType };
+
+const props = defineProps<{ options: TItem[]; modelValue: string; title: string }>();
+const emit = defineEmits(['update:modelValue']);
+const isOpened = ref<boolean>(false);
+
+const hasIcon = computed((): boolean => {
+  return props.options.some(({ icon }) => icon);
+});
+
+const value = computed((): TItem | undefined => {
+  return props.options.find(({ value }) => value === props.modelValue);
+});
+
+const selectItem = (value: string) => {
+  isOpened.value = false;
+  emit('update:modelValue', value);
 };
 </script>
 
 <style scoped>
-/* _dropdown.css */
 .dropdown {
   position: relative;
   display: inline-block;

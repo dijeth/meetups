@@ -13,7 +13,12 @@
         </UiTabs>
       </template>
       <template #action-buttons>
-        <UiButton v-if="actionButtons.includes('edit')" :tag="RouterLink" variant="secondary" :disabled="disabled"
+        <UiButton
+          v-if="actionButtons.includes('edit')"
+          :tag="RouterLink"
+          :to="{ name: 'edit-meetup', param: { meetupId: result.data.id } }"
+          variant="secondary"
+          :disabled="disabled"
           >Редактировать</UiButton
         >
         <UiApiButton
@@ -97,6 +102,8 @@ const successHandler = () => request(props.meetupId);
 const deleteSuccessHandler = () => {
   router.push({ name: 'index' });
 };
+
+const meetup = computed(() => result.value?.data);
 
 const actionButtons = computed(() => {
   const meetup = unref(result.value?.data);
