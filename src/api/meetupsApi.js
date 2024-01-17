@@ -38,7 +38,7 @@ export async function postMeetup(meetup) {
  * @returns {Promise<ResultContainer<Meetup>>}
  */
 export function putMeetup(meetup) {
-  // TODO: реализовать функцию
+  return httpClient.put(`/meetups/${meetup.id}`, meetup);
 }
 
 /**

@@ -1,7 +1,7 @@
 import { postImage } from '../api/imageApi';
 import type { ResultContainer } from '../api/httpClient/ResultContainer';
 import type { TAgendaItem, TMeetup } from 'src/types';
-import { postMeetup } from '../api/meetupsApi';
+import { postMeetup, putMeetup } from '../api/meetupsApi';
 
 let lastMeetupId = 0;
 /**
@@ -37,12 +37,24 @@ export function createAgendaItem(): TAgendaItem {
   };
 }
 
-export const postMeetupWithImage = async (meetup: TMeetup, file?: File): Promise<ResultContainer<TMeetup>> => {
+export const saveMeetupWithImage = async (
+  meetup: TMeetup,
+  saveFn: (m: TMeetup) => Promise<ResultContainer<TMeetup>>,
+  file?: File,
+): Promise<ResultContainer<TMeetup>> => {
   if (!file) {
-    return postMeetup(meetup);
+    return saveFn(meetup);
   }
 
   const imageResult = await postImage(file);
   const { image, id } = imageResult.success ? imageResult.data : { image: undefined, id: undefined };
-  return postMeetup({ ...meetup, image, imageId: id });
+  return saveFn({ ...meetup, image, imageId: id });
+};
+
+export const postMeetupWithImage = async (meetup: TMeetup, file?: File): Promise<ResultContainer<TMeetup>> => {
+  return saveMeetupWithImage(meetup, postMeetup, file);
+};
+
+export const putMeetupWithImage = async (meetup: TMeetup, file?: File): Promise<ResultContainer<TMeetup>> => {
+  return saveMeetupWithImage(meetup, putMeetup, file);
 };
