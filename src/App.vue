@@ -21,13 +21,12 @@ import { onMounted, ref } from 'vue';
 import { useToaster } from './plugins/toaster';
 import { useRouter } from 'vue-router';
 
-const { syncUser, setUser } = useAuthStore();
+const { syncUser } = useAuthStore();
 const isLoaded = ref<boolean>(false);
 const toaster = useToaster();
 const router = useRouter();
 
 // Установить <title> - "Meetups"
-document.title = 'Meetups';
 
 onUnauthenticated(async () => {
   // сессия пользователя больше не валидна - нужна обработка потери авторизации

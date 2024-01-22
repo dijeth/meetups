@@ -42,8 +42,6 @@ import { useToaster } from '../plugins/toaster';
 import { registerService } from '../services/authService';
 import { useRouter } from 'vue-router';
 
-// TODO: <title> "Регистрация | Meetups"
-
 const email = ref('');
 const fullname = ref('');
 const password = ref('');

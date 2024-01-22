@@ -1,5 +1,5 @@
 <template>
-  <LayoutMeetupForm title="Создание митапа">
+  <LayoutMeetupForm title="Редактирование митапа">
     <MeetupForm
       v-if="meetup"
       :meetup="meetup"
@@ -9,6 +9,7 @@
       :disabled="isLoading"
       ref="meetupFormRef"
     />
+    <UiAlert v-else>Загрузка...</UiAlert>
   </LayoutMeetupForm>
 </template>
 
@@ -22,8 +23,7 @@ import type { TMeetup } from 'src/types';
 import { useRoute, useRouter } from 'vue-router';
 import { useToaster } from '../plugins/toaster';
 import { getMeetup } from '../api/meetupsApi';
-
-// TODO: <title> "Редактирование митапа | Meetups"
+import UiAlert from '../components/UiAlert.vue';
 
 const { request, isLoading } = useApi(putMeetupWithImage, {
   showProgress: true,

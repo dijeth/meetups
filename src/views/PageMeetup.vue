@@ -81,8 +81,8 @@ import UiApiButton from '../components/UiApiButton.vue';
 import UiButton from '../components/UiButton.vue';
 import { useAuthStore } from '../stores/useAuthStore';
 import { RouterLink, useRouter } from 'vue-router';
+import { setDocumentTitle } from '../utils/domUtils';
 
-// TODO: Установить <title> - "<название митапа> | Meetups"
 // TODO: Fix meetup list updating after returning from meetup page
 
 const props = defineProps<{ meetupId: number }>();
@@ -134,6 +134,10 @@ watch(
 
 watchEffect(() => {
   disabled.value = !result.value?.success;
+});
+
+watchEffect(() => {
+  setDocumentTitle(meetup.value?.title || '');
 });
 </script>
 

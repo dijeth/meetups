@@ -23,8 +23,6 @@ import type { TMeetup } from 'src/types';
 import { useRouter } from 'vue-router';
 import { useToaster } from '../plugins/toaster';
 
-// TODO: title "Создание митапа | Meetups"
-
 const { user } = useAuthStore();
 const { request, isLoading } = useApi(postMeetupWithImage, {
   showProgress: true,

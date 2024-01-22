@@ -33,8 +33,6 @@ import { loginService } from '../services/authService';
 import { useToaster } from '../plugins/toaster';
 import { useRouter } from 'vue-router';
 
-// TODO: <title> "Вход | Meetups"
-
 const email = ref('admin@email.com');
 const password = ref('111111');
 

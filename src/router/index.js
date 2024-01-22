@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { scrollBehavior } from './scrollBehaviour';
 import { authGuard } from './authGuard';
+import { headerGuard } from './headGuard';
 
 /** @type {import('vue-router').RouteRecordRaw[]} */
 export const routes = [
@@ -24,13 +25,13 @@ export const routes = [
     path: '/meetups/create',
     name: 'create-meetup',
     component: () => import('../views/PageCreateMeetup.vue'),
-    meta: { auth: true },
+    meta: { auth: true, header: 'Создание митапа' },
   },
   {
     path: '/meetups/:meetupId(\\d+)/edit',
     name: 'edit-meetup',
     component: () => import('../views/PageEditMeetup.vue'),
-    meta: { auth: true },
+    meta: { auth: true, header: 'Редактирование митапа' },
   },
   {
     path: '/meetups/:meetupId(\\d+)',
@@ -60,20 +61,20 @@ export const routes = [
   },
   {
     path: '/login',
-    meta: { auth: false },
+    meta: { auth: false, header: 'Вход' },
     name: 'login',
     component: () => import('../views/PageLogin.vue'),
   },
   {
     path: '/register',
-    meta: { auth: false },
+    meta: { auth: false, header: 'Регистрация' },
     name: 'register',
     component: () => import('../views/PageRegister.vue'),
   },
-  // TODO: Task 05-vue-router/02-PageNotFound
   {
     path: '/:unknownPath(.*)',
     component: () => import('../views/PageNotFound.vue'),
+    meta: { header: 'Страница не найдена' },
   },
 ];
 
@@ -84,3 +85,4 @@ export const router = createRouter({
 });
 
 router.beforeEach(authGuard);
+router.afterEach(headerGuard);
