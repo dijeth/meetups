@@ -7,7 +7,6 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { router } from './router/index.js';
 import { createPinia } from 'pinia';
-import { useAuthStore } from './stores/useAuthStore';
 import { createToaster } from './plugins/toaster';
 import { createProgress } from './plugins/progress';
 

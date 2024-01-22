@@ -1,7 +1,7 @@
 <template>
   <component :is="tag" class="card">
     <div class="card__col">
-      <div class="card__cover" :style="cover && { '--bg-url': `url('${cover}')` }">
+      <div class="card__cover">
         <header>
           <slot name="header" />
         </header>
@@ -15,31 +15,23 @@
   </component>
 </template>
 
-<script>
-export default {
-  name: 'UiCard',
+<script setup lang="ts">
+import { computed, type ComponentPublicInstance } from 'vue';
 
-  props: {
-    tag: {
-      type: [String, Object],
-      default: 'div',
-    },
+const props = withDefaults(
+  defineProps<{
+    tag?: string | ComponentPublicInstance;
+    cover: string;
+    badge?: string;
+  }>(),
+  { tag: 'div' },
+);
 
-    cover: {
-      type: String,
-    },
-
-    badge: {
-      type: String,
-      required: false,
-    },
-  },
-};
+const bgUrl = computed(() => `${props.cover ? `url("${props.cover}")` : 'var(--default-cover)'}`);
 </script>
 
 <style scoped>
 /* _card.css */
-/* TODO: Добавить v-bind в стили */
 .card {
   display: flex;
   flex-direction: row;
@@ -60,7 +52,7 @@ export default {
 }
 
 .card__cover {
-  --bg-url: var(--default-cover);
+  --bg-url: v-bind(bgUrl);
   background-size: cover;
   background-position: center;
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--bg-url);
