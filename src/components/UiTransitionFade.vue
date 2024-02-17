@@ -4,16 +4,11 @@
   </Transition>
 </template>
 
-<script>
-// TODO: Task 03-sfc/04-UiTransition
-
-export default {
-  name: 'UiTransitionFade',
-};
-</script>
+<script setup></script>
 
 <style scoped>
 /* _transitions.css */
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease-in-out;
