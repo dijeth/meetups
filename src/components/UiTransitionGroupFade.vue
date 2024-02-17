@@ -5,19 +5,19 @@
 </template>
 
 <script>
-// TODO: Task 03-sfc/04-UiTransition
-
 export default {
   name: 'UiTransitionGroupFade',
 };
 </script>
 
 <style scoped>
+/* _transitions.css */
+
 .fade-list {
   position: relative;
 }
 
-.fade-list :deep(*) {
+.fade-list :deep(> *) {
   opacity: 1;
   transition: opacity 0.3s ease-out;
 }

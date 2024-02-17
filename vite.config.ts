@@ -19,7 +19,6 @@ export default defineConfig({
     proxy: {
       '/api': {
         // target: 'https://course-vue.javascript.ru',
-        // Для локально развёрнутого сервера
         target: 'http://localhost:3000',
         changeOrigin: true,
       },

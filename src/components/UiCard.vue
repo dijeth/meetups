@@ -21,7 +21,7 @@ import { computed, type ComponentPublicInstance } from 'vue';
 const props = withDefaults(
   defineProps<{
     tag?: string | ComponentPublicInstance;
-    cover: string;
+    cover?: string;
     badge?: string;
   }>(),
   { tag: 'div' },

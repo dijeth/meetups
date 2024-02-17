@@ -107,7 +107,7 @@ const meetup = computed(() => result.value?.data);
 
 const actionButtons = computed(() => {
   const meetup = unref(result.value?.data);
-  if (!meetup || meetup.date < Date.now()) {
+  if (!meetup /* || meetup.date < Date.now() */) {
     return [];
   }
 
