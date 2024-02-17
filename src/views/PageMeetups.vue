@@ -39,10 +39,12 @@
     </div>
 
     <UiAlert v-if="isLoading">Загрузка...</UiAlert>
-    <KeepAlive v-else include="MeetupsCalendar">
-      <component :is="viewComponent" v-if="filteredMeetups.length" :meetups="filteredMeetups" />
+    <template v-else>
+      <KeepAlive v-if="filteredMeetups.length">
+        <component :is="viewComponent" :meetups="filteredMeetups" />
+      </KeepAlive>
       <UiAlert v-else>Митапов по заданным условиям не найдено...</UiAlert>
-    </KeepAlive>
+    </template>
   </UiContainer>
 </template>
 
