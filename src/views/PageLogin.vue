@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-// TODO: Task 05-vue-router/01-AuthPages
 import { ref } from 'vue';
 import UiFormGroup from '../components/UiFormGroup.vue';
 import UiLink from '../components/UiLink.vue';
@@ -31,21 +30,22 @@ import LayoutAuth from '../components/LayoutAuth.vue';
 import { useAuthStore } from '../stores/useAuthStore';
 import { loginService } from '../services/authService';
 import { useToaster } from '../plugins/toaster';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { getBackPath } from '../utils/routerUtils';
 
-const email = ref('admin@email.com');
-const password = ref('111111');
+const email = ref();
+const password = ref();
 
 const { setUser } = useAuthStore();
 const toaster = useToaster();
 const router = useRouter();
+const route = useRoute();
 
 const handleSubmit = async () => {
   try {
     setUser(await loginService(email.value, password.value));
     toaster.success('Авторизация прошла успешно');
-    //  TODO: Перейти на from (Task 05-vue-router/01-AuthPages)
-    router.push({ name: 'index' });
+    router.push({ name: getBackPath(route.query) || 'index' });
   } catch (err) {
     toaster.error('Неверные учётные данные...');
   }

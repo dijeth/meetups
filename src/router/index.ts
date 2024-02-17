@@ -1,11 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { scrollBehavior } from './scrollBehaviour';
-import { authGuard } from './authGuard';
-import { headerGuard } from './headGuard';
+import { authGuard, headerGuard, pathSaverGuard } from './guards';
 
-/** @type {import('vue-router').RouteRecordRaw[]} */
-export const routes = [
-  // Only for demo
+export const routes: RouteRecordRaw[] = [
   {
     path: '/demo',
     name: 'demo',
@@ -86,3 +83,5 @@ export const router = createRouter({
 
 router.beforeEach(authGuard);
 router.afterEach(headerGuard);
+
+router.beforeEach(pathSaverGuard);
