@@ -83,8 +83,6 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { RouterLink, useRouter } from 'vue-router';
 import { setDocumentTitle } from '../utils/domUtils';
 
-// TODO: Fix meetup list updating after returning from meetup page
-
 const props = defineProps<{ meetupId: number }>();
 
 const { isLoading, request, result } = useApi<TMeetup>(getMeetup);

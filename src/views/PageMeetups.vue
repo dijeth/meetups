@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onActivated, onMounted } from 'vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
 import UiButtonGroup from '../components/UiButtonGroup.vue';
@@ -98,6 +98,7 @@ const filteredMeetups = computed(() =>
 );
 
 onMounted(() => request());
+onActivated(() => request());
 </script>
 
 <style scoped>
