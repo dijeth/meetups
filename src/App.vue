@@ -6,8 +6,6 @@
           <component :is="Component" />
         </KeepAlive>
       </template>
-      <!-- <template #fallback>
-      </template> -->
     </RouterView>
     <UiAlert v-else>Загрузка...</UiAlert>
   </LayoutBase>
@@ -25,8 +23,6 @@ const { syncUser } = useAuthStore();
 const isLoaded = ref<boolean>(false);
 const toaster = useToaster();
 const router = useRouter();
-
-// Установить <title> - "Meetups"
 
 onUnauthenticated(async () => {
   // сессия пользователя больше не валидна - нужна обработка потери авторизации
