@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type ComponentPublicInstance } from 'vue';
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    tag?: string | ComponentPublicInstance;
+    tag?: string;
     cover?: string;
     badge?: string;
   }>(),
