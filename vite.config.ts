@@ -3,7 +3,7 @@ import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-  base: '/meetups/',
+  base: process.env.NODE_ENV === 'development' ? '' : '/meetups/',
   plugins: [vue(), splitVendorChunkPlugin()],
 
   resolve: {
@@ -14,14 +14,5 @@ export default defineConfig({
       },
       { find: /^\/(assets|icons)\/(.*)/, replacement: '/src/$1/$2' },
     ],
-  },
-
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://brief-sun-arithmetic.glitch.me',
-        changeOrigin: true,
-      },
-    },
   },
 });
