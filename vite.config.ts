@@ -19,7 +19,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://course-vue.javascript.ru',
+        target: 'https://brief-sun-arithmetic.glitch.me',
         changeOrigin: true,
       },
     },
