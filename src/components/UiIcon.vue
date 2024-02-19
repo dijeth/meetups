@@ -3,24 +3,27 @@
 </template>
 
 <script lang="ts">
-export type TIconType =
-  | 'alert-circle'
-  | 'cal-sm'
-  | 'cal-lg'
-  | 'check'
-  | 'check-circle'
-  | 'chevron-down'
-  | 'clock'
-  | 'coffee'
-  | 'key'
-  | 'list'
-  | 'map'
-  | 'pen-tool'
-  | 'pill-active'
-  | 'search'
-  | 'trash'
-  | 'tv'
-  | 'user';
+export const IconType = {
+  ALERT_CIRCLE: 'alert-circle',
+  CAL_SM: 'cal-sm',
+  CAL_LG: 'cal-lg',
+  CHECK: 'check',
+  CHECK_CIRCLE: 'check-circle',
+  CHEVRON_DOWN: 'chevron-down',
+  CLOCK: 'clock',
+  COFFEE: 'coffee',
+  KEY: 'key',
+  LIST: 'list',
+  MAP: 'map',
+  PEN_TOOL: 'pen-tool',
+  PILL_ACTIVE: 'pill-active',
+  SEARCH: 'search',
+  TRASH: 'trash',
+  TV: 'tv',
+  USER: 'user',
+} as const;
+
+export type TIconType = (typeof IconType)[keyof typeof IconType];
 </script>
 
 <script setup lang="ts">

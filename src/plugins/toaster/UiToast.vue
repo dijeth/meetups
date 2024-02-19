@@ -16,10 +16,10 @@ export type TToastKind = (typeof ToastKind)[keyof typeof ToastKind];
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
-import UiIcon from '../../components/UiIcon.vue';
+import UiIcon, { type TIconType, IconType } from '../../components/UiIcon.vue';
 
 type TToastData = {
-  icon: string;
+  icon: TIconType;
   className: string;
 };
 
@@ -41,14 +41,14 @@ const data = computed<TToastData>(() => {
   switch (props.kind) {
     case ToastKind.ERROR:
       return {
-        icon: 'alert-circle',
+        icon: IconType.ALERT_CIRCLE,
         className: 'toast_error',
       };
 
     default:
     case ToastKind.SUCCESS:
       return {
-        icon: 'check-circle',
+        icon: IconType.CHECK_CIRCLE,
         className: 'toast_success',
       };
   }
