@@ -36,7 +36,14 @@ export const getUserService = async (): Promise<User | null> => {
 };
 
 export const loginService = async (email: string, password: string): Promise<User> => {
-  const user = await sendApiRequest(() => loginUser(email, password));
+  const user = await sendApiRequest(
+    () => loginUser(email, password),
+    (err) => {
+      setUnlogged();
+      throw err;
+    },
+  );
+
   setLogged();
   return user;
 };
