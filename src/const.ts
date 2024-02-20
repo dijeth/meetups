@@ -103,3 +103,9 @@ export const FormSchema: Record<TAgendaItemType, TFormSchema> = {
     },
   },
 };
+
+export const ADMIN_EMAIL = 'admin@email.com';
+export const DEMO_USER = {
+  email: 'demo@email',
+  password: '111111',
+};

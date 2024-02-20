@@ -10,6 +10,7 @@
 
       <template #buttons>
         <UiButton variant="primary" type="submit" block>Войти</UiButton>
+        <UiButton variant="secondary" type="button" @click="loginAsDemoUser" block>Войти, как Demo User</UiButton>
       </template>
 
       <template #append>
@@ -31,6 +32,7 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { loginService } from '../services/authService';
 import { useToaster } from '../plugins/toaster';
 import { useRoute, useRouter } from 'vue-router';
+import { DEMO_USER } from '../const';
 import { getBackPath } from '../utils/routerUtils';
 
 const email = ref();
@@ -41,14 +43,22 @@ const toaster = useToaster();
 const router = useRouter();
 const route = useRoute();
 
-const handleSubmit = async () => {
+const login = async (user: string, password: string) => {
   try {
-    setUser(await loginService(email.value, password.value));
+    setUser(await loginService(user, password));
     toaster.success('Авторизация прошла успешно');
     router.push({ name: getBackPath(route.query) || 'index' });
   } catch (err) {
     toaster.error('Неверные учётные данные...');
   }
+};
+
+const handleSubmit = () => {
+  login(email.value, password.value);
+};
+
+const loginAsDemoUser = () => {
+  login(DEMO_USER.email, DEMO_USER.password);
 };
 </script>
 

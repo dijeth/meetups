@@ -32,6 +32,9 @@ export default {
   padding: 0 40px;
   margin-top: 40px;
 }
+.form__buttons :deep(button) {
+  margin-top: 10px;
+}
 
 .form__append {
   margin-top: 40px;
