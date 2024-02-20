@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onActivated, onMounted } from 'vue';
+import { computed, onActivated, onMounted, watch } from 'vue';
 import MeetupsCalendar from '../components/MeetupsCalendar.vue';
 import UiRadioGroup from '../components/UiRadioGroup.vue';
 import UiButtonGroup from '../components/UiButtonGroup.vue';
@@ -65,6 +65,7 @@ import type { TMeetup } from '../types';
 import MeetupsList from '../components/MeetupsList.vue';
 import { useApi } from '../composables/useApi';
 import { getMeetups } from '../api/meetupsApi';
+import { useAuthStore } from '../stores/useAuthStore';
 
 const dateFilterOptions = [
   { text: 'Все', value: 'all' },
@@ -88,17 +89,19 @@ const searchFilter = (meetup: TMeetup) =>
     .toLowerCase()
     .includes(search.value.toLowerCase());
 
-const { request, result, isLoading } = useApi<TMeetup[]>(getMeetups);
+const { request, result, isLoading } = useApi<TMeetup[]>(getMeetups, { showProgress: true });
 const meetups = computed(() => (result.value && result.value.success ? result.value.data : []));
 const view = useQuerySync('view', 'list');
 const search = useQuerySync('search', '');
 const date = useQuerySync('date', 'all');
 const participation = useQuerySync('participation', 'all');
+const authStore = useAuthStore();
 const viewComponent = computed(() => (view.value === 'list' ? MeetupsList : MeetupsCalendar));
 const filteredMeetups = computed(() =>
   meetups.value.filter((meetup: TMeetup) => dateFilter(meetup) && participationFilter(meetup) && searchFilter(meetup)),
 );
 
+watch(() => authStore.isAuthenticated, request);
 onMounted(() => request());
 onActivated(() => request());
 </script>
