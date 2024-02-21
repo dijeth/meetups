@@ -23,64 +23,8 @@ import MeetupCover from './MeetupCover.vue';
 import MeetupInfo from './MeetupInfo.vue';
 import UiContainer from './UiContainer.vue';
 import type { TMeetup } from 'src/types';
-import { useAuthStore } from '../stores/useAuthStore';
-import { computed } from 'vue';
-import { RouterLink, type RouteLocationRaw } from 'vue-router';
 
-const props = defineProps<{ meetup: TMeetup }>();
-const { isAuthenticated } = useAuthStore();
-
-type TActionButton = {
-  variant: 'primary' | 'secondary' | 'danger';
-  title: string;
-  key: string;
-  tag: 'a' | 'button' | Object;
-  to?: RouteLocationRaw;
-  onClick?: (...args: any[]) => void;
-};
-
-const ActionButton: { [k: string]: TActionButton } = {
-  EDIT: {
-    variant: 'primary',
-    title: 'Редактировать',
-    key: 'EDIT',
-    tag: RouterLink,
-    to: { name: 'edit-meetup', params: { meetupId: props.meetup.id.toString() } },
-  },
-  DELETE: { variant: 'danger', title: 'Удалить', key: 'DELETE', tag: 'button', onClick: () => {} },
-  CANCEL_ATTENDING: {
-    variant: 'secondary',
-    title: 'Отменить участие',
-    key: 'CANCEL_ATTENDING',
-    tag: 'button',
-    onClick: () => {},
-  },
-  ATTEND: {
-    variant: 'primary',
-    title: 'Участвовать',
-    key: 'ATTEND',
-    tag: 'button',
-    onClick: () => {
-      console.log('Участвовать');
-    },
-  },
-};
-
-const userButtons = computed<TActionButton[]>(() => {
-  if (props.meetup.organizing) {
-    return [ActionButton.EDIT, ActionButton.DELETE];
-  }
-
-  if (props.meetup.attending) {
-    return [ActionButton.CANCEL_ATTENDING];
-  }
-
-  if (isAuthenticated) {
-    return [ActionButton.ATTEND];
-  }
-
-  return [];
-});
+defineProps<{ meetup: TMeetup }>();
 </script>
 
 <style scoped>
@@ -95,11 +39,10 @@ const userButtons = computed<TActionButton[]>(() => {
 }
 
 .meetup__aside-buttons {
-  padding: 0 0 0 34px;
-  margin-top: 16px;
+  margin-top: 30px;
 }
 
-.meetup__aside-button {
+.meetup__aside-buttons :deep(.button) {
   margin: 0 10px 10px 0;
 }
 

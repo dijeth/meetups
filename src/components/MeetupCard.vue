@@ -5,8 +5,10 @@
     </template>
 
     <template #default>
-      <UiBadge v-if="meetup.organizing" type="success" class="meetup-card__badge">Организую</UiBadge>
-      <UiBadge v-if="meetup.attending" type="primary" class="meetup-card__badge">Участвую</UiBadge>
+      <div class="meetup-card__badge-list">
+        <UiBadge v-if="meetup.organizing" type="success" class="meetup-card__badge">Организую</UiBadge>
+        <UiBadge v-if="meetup.attending" type="primary" class="meetup-card__badge">Участвую</UiBadge>
+      </div>
       <MeetupInfo :date="meetup.date" :place="meetup.place" :organizer="meetup.organizer" />
     </template>
   </UiCard>
@@ -28,9 +30,12 @@ defineProps<{ meetup: TMeetup }>();
   position: relative;
 }
 
-.meetup-card__badge {
+.meetup-card__badge-list {
   position: absolute;
   top: 0;
   right: 0;
+}
+.meetup-card__badge {
+  margin-left: 10px;
 }
 </style>

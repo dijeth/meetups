@@ -17,6 +17,7 @@
           v-if="actionButtons.includes('edit')"
           :tag="RouterLink"
           :to="{ name: 'edit-meetup', param: { meetupId: result.data.id } }"
+          :block="true"
           variant="secondary"
           :disabled="disabled"
           >Редактировать</UiButton
@@ -24,6 +25,7 @@
         <UiApiButton
           v-if="actionButtons.includes('delete')"
           variant="danger"
+          :block="true"
           :api-function="() => deleteMeetup(result!.data!.id)"
           success-message="Митап удален"
           :error-message="API_NATIVE_RESPONSE"
@@ -35,6 +37,7 @@
         <UiApiButton
           v-if="actionButtons.includes('attend')"
           variant="primary"
+          :block="true"
           :api-function="() => attendMeetup(result!.data!.id)"
           success-message="Сохранено"
           :error-message="API_NATIVE_RESPONSE"
@@ -46,6 +49,7 @@
         <UiApiButton
           v-if="actionButtons.includes('leave')"
           variant="secondary"
+          :block="true"
           :api-function="() => leaveMeetup(result!.data!.id)"
           success-message="Сохранено"
           :error-message="API_NATIVE_RESPONSE"

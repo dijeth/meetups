@@ -13,6 +13,7 @@
 
 <script lang="ts" setup>
 import LayoutBase from './components/LayoutBase.vue';
+import UiAlert from './components/UiAlert.vue';
 import { onNetworkError, onUnauthenticated } from './api/httpClient/httpClient';
 import { useAuthStore } from './stores/useAuthStore';
 import { onMounted, ref } from 'vue';
