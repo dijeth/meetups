@@ -1,12 +1,17 @@
 <template>
   <UiCalendarView v-slot="{ day, year, month }">
     <UiCalendarEvent
+      class="calendar-event"
       v-for="meetup in meetupsMap.get(`${year}${month}${day}`) || []"
-      tag="a"
-      :href="`/meetups/${meetup.id}`"
-      :key="meetup"
+      tag="RouterLink"
+      :to="{ name: 'meetup', params: { meetupId: meetup.id } }"
+      :key="meetup.id"
     >
       {{ meetup.title }}
+      <div class="calendar-event__badge-list" v-if="meetup.organizing || meetup.attending">
+        <UiBadge v-if="meetup.organizing" type="success" title="Организую">О</UiBadge>
+        <UiBadge v-if="meetup.attending" type="primary" title="Участвую">У</UiBadge>
+      </div>
     </UiCalendarEvent>
   </UiCalendarView>
 </template>
@@ -15,13 +20,8 @@
 import UiCalendarView from './UiCalendarView.vue';
 import UiCalendarEvent from './UiCalendarEvent.vue';
 import { computed } from 'vue';
-
-type TMeetup = {
-  id: number;
-  date: number;
-  title: string;
-  __dateForDebug: string;
-};
+import UiBadge from './UiBadge.vue';
+import type { TMeetup } from 'src/types';
 
 const props = defineProps<{ meetups: TMeetup[] }>();
 const meetupsMap = computed((): Map<string, TMeetup[]> => {
@@ -39,4 +39,15 @@ const meetupsMap = computed((): Map<string, TMeetup[]> => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.calendar-event {
+  display: flex;
+  justify-content: space-between;
+}
+.calendar-event__badge-list {
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+</style>

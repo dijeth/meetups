@@ -30,11 +30,11 @@ export default {
 <style scoped>
 /* _badge.css */
 .badge {
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 1em;
+  line-height: 1em;
   text-align: right;
   display: inline-block;
-  padding: 4px 12px;
+  padding: 0.5em;
 }
 
 .badge_primary {

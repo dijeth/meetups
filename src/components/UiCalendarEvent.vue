@@ -4,25 +4,18 @@
   </component>
 </template>
 
-<script>
-export default {
-  name: 'UiCalendarEvent',
-
-  props: {
-    tag: {
-      type: [String, Object, Function],
-      default: 'div',
-    },
-  },
-};
+<script setup lang="ts">
+const props = defineProps<{ tag: string }>();
 </script>
 
 <style scoped>
 .calendar-event {
-  --max-lines: 2;
+  /* --max-lines: 2; */
   --line-height: 16px;
 
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: left;
   text-decoration: none;
   text-overflow: ellipsis;
