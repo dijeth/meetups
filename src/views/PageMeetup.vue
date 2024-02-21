@@ -19,7 +19,8 @@
           :to="{ name: 'edit-meetup', param: { meetupId: result.data.id } }"
           :block="true"
           variant="secondary"
-          :disabled="disabled"
+          :disabled="disabled || timedout"
+          :title="timedout ? 'Дата мероприятия прошла, действие невозможно' : ''"
           >Редактировать</UiButton
         >
         <UiApiButton
@@ -29,7 +30,8 @@
           :api-function="() => deleteMeetup(result!.data!.id)"
           success-message="Митап удален"
           :error-message="API_NATIVE_RESPONSE"
-          :disabled="disabled"
+          :disabled="disabled || timedout"
+          :title="timedout ? 'Дата мероприятия прошла, действие невозможно' : ''"
           @loading="loadingHandler"
           @success="deleteSuccessHandler"
           >Удалить</UiApiButton
@@ -41,7 +43,8 @@
           :api-function="() => attendMeetup(result!.data!.id)"
           success-message="Сохранено"
           :error-message="API_NATIVE_RESPONSE"
-          :disabled="disabled"
+          :disabled="disabled || timedout"
+          :title="timedout ? 'Дата мероприятия прошла, действие невозможно' : ''"
           @loading="loadingHandler"
           @success="successHandler"
           >Участвовать</UiApiButton
@@ -53,7 +56,8 @@
           :api-function="() => leaveMeetup(result!.data!.id)"
           success-message="Сохранено"
           :error-message="API_NATIVE_RESPONSE"
-          :disabled="disabled"
+          :disabled="disabled || timedout"
+          :title="timedout ? 'Дата мероприятия прошла, действие невозможно' : ''"
           @loading="loadingHandler"
           @success="successHandler"
           >Отменить участие</UiApiButton
@@ -90,7 +94,7 @@ import { setDocumentTitle } from '../utils/domUtils';
 const props = defineProps<{ meetupId: number }>();
 
 const { isLoading, request, result } = useApi<TMeetup>(getMeetup);
-const { isAuthenticated } = useAuthStore();
+const { isAuthenticated, isAdmin } = useAuthStore();
 const router = useRouter();
 const disabled = ref<boolean>(true);
 
@@ -106,26 +110,21 @@ const deleteSuccessHandler = () => {
 };
 
 const meetup = computed(() => result.value?.data);
+const timedout = computed(() => meetup.value && meetup.value.date < Date.now());
 
 const actionButtons = computed(() => {
   const meetup = unref(result.value?.data);
-  if (!meetup /* || meetup.date < Date.now() */) {
+  if (!meetup || !isAuthenticated) {
     return [];
   }
 
-  if (meetup.organizing) {
-    return ['edit', 'delete'];
+  const buttons = meetup.attending ? ['leave'] : ['attend'];
+
+  if (meetup.organizing || isAdmin) {
+    buttons.push('edit', 'delete');
   }
 
-  if (meetup.attending) {
-    return ['leave'];
-  }
-
-  if (isAuthenticated) {
-    return ['attend'];
-  }
-
-  return [];
+  return buttons;
 });
 
 watch(

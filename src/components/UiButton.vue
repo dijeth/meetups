@@ -42,11 +42,13 @@ withDefaults(defineProps<UiButtonProps>(), { tag: 'button', variant: 'secondary'
   text-decoration: none;
 }
 
-.button:disabled {
-  filter: saturate(10%);
-}
 .button:hover {
   filter: saturate(200%);
+}
+.button:disabled,
+.button:disabled:hover {
+  filter: saturate(10%);
+  cursor: default;
 }
 .button.button_block {
   display: block;
