@@ -28,10 +28,14 @@ const StateType = {
   EMPTY: 'EMPTY',
 } as const;
 
-const props = defineProps<{
-  preview?: string;
-  uploader?: (f: File) => Promise<any>;
-}>();
+const props = withDefaults(
+  defineProps<{
+    preview?: string;
+    uploader?: (f: File) => Promise<any>;
+    maxSize?: number;
+  }>(),
+  { maxSize: 1000000 },
+);
 
 defineOptions({ inheritAttrs: false });
 const emit = defineEmits(['select', 'upload', 'error', 'remove']);
@@ -71,8 +75,16 @@ const changeHandler = async (event: Event) => {
     return;
   }
 
-  image.value = URL.createObjectURL(files[0]);
-  emit('select', files[0]);
+  const [file] = files;
+
+  if (file.size > props.maxSize) {
+    emit('error', `Размер файла не должен быть больше ${Math.round(props.maxSize / 10000) / 100}MB`);
+    inputRef.value!.value = '';
+    return;
+  }
+
+  image.value = URL.createObjectURL(file);
+  emit('select', file);
 
   if (!props.uploader) {
     state.value = StateType.UPLOADED;
@@ -82,7 +94,7 @@ const changeHandler = async (event: Event) => {
   const storedState = state.value;
   state.value = StateType.UPLOADING;
   try {
-    const response = await props.uploader(files[0]);
+    const response = await props.uploader(file);
     state.value = StateType.UPLOADED;
     emit('upload', response);
   } catch (err) {
