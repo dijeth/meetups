@@ -102,7 +102,6 @@ const filteredMeetups = computed(() =>
 );
 
 watch(() => authStore.isAuthenticated, request);
-onMounted(() => request());
 onActivated(() => request());
 </script>
 

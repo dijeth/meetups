@@ -20,6 +20,7 @@
             :preview="localMeetup.image"
             @select="handleImageSelect"
             @remove="handleImageRemove"
+            @error="handleImageError"
           />
         </UiFormGroup>
       </fieldset>
@@ -78,6 +79,7 @@ import MeetupAgendaItemForm from './MeetupAgendaItemForm.vue';
 import { createAgendaItem } from '../services/meetupService.js';
 import type { TMeetup } from 'src/types';
 import { ref } from 'vue';
+import { useToaster } from '../plugins/toaster';
 
 const props = withDefaults(
   defineProps<{
@@ -92,6 +94,7 @@ const emit = defineEmits(['submit', 'cancel']);
 
 const localMeetup = ref<TMeetup & { imageFile?: File }>(klona(props.meetup));
 const formRef = ref<HTMLFormElement>();
+const toaster = useToaster();
 
 const addAgendaItem = () => {
   const newItem = createAgendaItem();
@@ -123,6 +126,9 @@ const handleImageRemove = () => {
   localMeetup.value.image = undefined;
   localMeetup.value.imageId = undefined;
   localMeetup.value.imageFile = undefined;
+};
+const handleImageError = (err: string) => {
+  toaster.error(err);
 };
 </script>
 

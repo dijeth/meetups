@@ -104,7 +104,9 @@ const loadingHandler = (isLoading: boolean) => {
   }
 };
 
-const successHandler = () => request(props.meetupId);
+const successHandler = () => {
+  return request(props.meetupId);
+};
 const deleteSuccessHandler = () => {
   router.push({ name: 'index' });
 };
@@ -129,7 +131,9 @@ const actionButtons = computed(() => {
 
 watch(
   () => props.meetupId,
-  () => request(props.meetupId),
+  () => {
+    request(props.meetupId);
+  },
   { immediate: true },
 );
 
