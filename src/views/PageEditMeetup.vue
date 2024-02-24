@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { type ComponentPublicInstance, ref, watch, computed } from 'vue';
+import { type ComponentPublicInstance, ref, computed, onActivated } from 'vue';
 import MeetupForm from '../components/MeetupForm.vue';
 import LayoutMeetupForm from '../components/LayoutMeetupForm.vue';
 import { useApi, API_NATIVE_RESPONSE } from '../composables/useApi';
@@ -45,6 +45,14 @@ const meetup = computed(() => {
   return meetupResult.value.success ? meetupResult.value.data : undefined;
 });
 
+const requestedMeetutId = computed<number | null>(() => {
+  const { meetupId } = route.params;
+  if (!meetupId) {
+    return null;
+  }
+  return Array.isArray(meetupId) ? +meetupId[0] : +meetupId;
+});
+
 const meetupFormRef = ref<ComponentPublicInstance<typeof MeetupForm>>();
 const router = useRouter();
 const route = useRoute();
@@ -63,14 +71,11 @@ const handleSubmit = async (meetup: TMeetup, file?: File) => {
   }
 };
 
-watch(
-  () => route.params.meetupId,
-  (value) => {
-    const meetupId = Array.isArray(value) ? +value[0] : +value;
-    requestMeetup(meetupId);
-  },
-  { immediate: true },
-);
+onActivated(() => {
+  if (requestedMeetutId.value !== null) {
+    requestMeetup(requestedMeetutId.value);
+  }
+});
 </script>
 
 <style scoped></style>

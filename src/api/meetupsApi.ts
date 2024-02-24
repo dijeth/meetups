@@ -1,4 +1,3 @@
-import type { TApiFunction } from 'src/composables/useApi.js';
 import { httpClient } from './httpClient/httpClient.js';
 import type { TMeetup } from 'src/types.js';
 import type { ResultContainer } from './httpClient/ResultContainer.js';
