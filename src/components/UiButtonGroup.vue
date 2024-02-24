@@ -21,7 +21,6 @@ provide('setActiveValue', (value: string) => emits('update:modelValue', value));
 .button-group {
   display: inline-flex;
   flex-direction: row;
-  flex-wrap: wrap;
   white-space: nowrap;
 }
 </style>
